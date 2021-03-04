@@ -9,4 +9,5 @@ app.use(async (ctx) => {
   ctx.body = `Hello World, your parameters are ${obj}`;
 });
 
+console.log('New branch was created');
 app.listen(PORT);
