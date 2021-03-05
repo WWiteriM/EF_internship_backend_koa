@@ -31,10 +31,6 @@
     }
   },
   "lint-staged": {
-    "src/*.js": [
-      "npm run prettier",
-      "npm run lint:write"
-    ],
     "*.js": [
       "npm run prettier",
       "npm run lint:write"
