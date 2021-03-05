@@ -31,7 +31,14 @@
     }
   },
   "lint-staged": {
-    "src/*.js": ["npm run lint:write", "npm run prettier"],
-    "*.js": ["npm run lint:write", "npm run prettier", "git add ."]
+    "src/*.js": [
+      "npm run lint:write",
+      "npm run prettier"
+    ],
+    "*.js": [
+      "npm run lint:write",
+      "npm run prettier",
+      "git add ."
+    ]
   }
 }
