@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint --fix index.js"
+    "lint": "./node_modules/.bin/eslint --fix index.js",
+    "prettier": "prettier"
   },
   "keywords": [],
   "author": "Arsenii",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.13.1"
+    "koa": "^2.13.1",
+    "prettier": "^2.2.1"
   },
   "devDependencies": {
     "eslint": "^7.21.0",
