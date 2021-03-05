@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start ecosystem/ecosystem.config.js",
+    "delete": "pm2 delete ecosystem/ecosystem.config.js",
     "lint": "./node_modules/.bin/eslint --debug src/",
-    "lint:write": "eslint \"**/*.js\" --fix",
+    "lint:write": "eslint **/*.js --fix",
     "prettier": "prettier --write src/*.js"
   },
   "keywords": [],
@@ -30,6 +31,7 @@
     }
   },
   "lint-staged": {
+    "src/*.js": ["npm run lint:write", "npm run prettier"],
     "*.js": ["npm run lint:write", "npm run prettier", "git add ."]
   }
 }
