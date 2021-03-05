@@ -1,7 +1,6 @@
 const Koa = require('koa');
 
 const { PORT } = process.env;
-
 const app = new Koa();
 
 // response
