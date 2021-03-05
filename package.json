@@ -6,8 +6,7 @@
   "scripts": {
     "start": "pm2 start ecosystem/ecosystem.config.js",
     "delete": "pm2 delete ecosystem/ecosystem.config.js",
-    "lint": "./node_modules/.bin/eslint --debug src/",
-    "lint:write": "eslint \"**/*.js\"",
+    "lint": "eslint \"**/*.js\"",
     "prettier": "prettier --write **/*.js"
   },
   "keywords": [],
@@ -33,7 +32,7 @@
   "lint-staged": {
     "*.js": [
       "npm run prettier",
-      "npm run lint:write"
+      "npm run lint"
     ]
   }
 }
