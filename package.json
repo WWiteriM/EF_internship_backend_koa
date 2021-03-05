@@ -8,7 +8,7 @@
     "delete": "pm2 delete ecosystem/ecosystem.config.js",
     "lint": "./node_modules/.bin/eslint --debug src/",
     "lint:write": "eslint **/*.js",
-    "prettier": "prettier --write src/*.js"
+    "prettier": "prettier --write **/*.js"
   },
   "keywords": [],
   "author": "Arsenii",
@@ -32,13 +32,12 @@
   },
   "lint-staged": {
     "src/*.js": [
-      "npm run lint:write",
-      "npm run prettier"
+      "npm run prettier",
+      "npm run lint:write"
     ],
     "*.js": [
-      "npm run lint:write",
       "npm run prettier",
-      "git add ."
+      "npm run lint:write"
     ]
   }
 }
