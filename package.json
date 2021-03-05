@@ -31,8 +31,8 @@
   },
   "lint-staged": {
     "*.js": [
-      "npm run prettier",
-      "npm run lint"
+      "npm run lint",
+      "npm run prettier"
     ]
   }
 }
