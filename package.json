@@ -2,7 +2,7 @@
   "name": "project",
   "version": "1.0.0",
   "description": "",
-  "main": "app/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "pm2 start ecosystem/ecosystem.config.js",
     "delete": "pm2 delete ecosystem/ecosystem.config.js",
