@@ -15,6 +15,6 @@
     },
     "rules": {
         "linebreak-style": 0,
-        "indent": ["error", 4, { "MemberExpression": 1 }]
+        "indent": ["error", 2, { "MemberExpression": 1 }]
     }
 }
