@@ -4,37 +4,62 @@ const router = new Router({
   prefix: '/news',
 });
 
-const getNews = (ctx, next) => {
-  const { params } = ctx;
-  ctx.body = `GET specific news method with params = ${JSON.stringify(params)}`;
-  next();
-};
-
-const getListOfNews = (ctx, next) => {
-  ctx.body = 'GET all news method';
-  next();
-};
-
-const postNews = (ctx, next) => {
-  ctx.body = 'POST news method';
-  next();
-};
-
-const putNews = (ctx, next) => {
-  ctx.body = 'PUT news method';
-  next();
-};
-
-const deleteNews = (ctx, next) => {
-  ctx.body = 'DELETE news method';
-  next();
-};
-
 router
   .get('/:id', getNews)
   .get('/', getListOfNews)
   .post('/', postNews)
   .put('/', putNews)
   .delete('/', deleteNews);
+
+function getNews(ctx) {
+  try {
+    const { params } = ctx;
+    ctx.body = `GET specific news method with params = ${JSON.stringify(params)}`;
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function getListOfNews(ctx) {
+  try {
+    ctx.body = 'GET all news method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function postNews(ctx) {
+  try {
+    ctx.body = 'POST news method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function putNews(ctx) {
+  try {
+    ctx.body = 'PUT news method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function deleteNews(ctx) {
+  try {
+    ctx.body = 'DELETE news method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
 
 module.exports = router;

@@ -4,37 +4,62 @@ const router = new Router({
   prefix: '/messages',
 });
 
-const getMessage = (ctx, next) => {
-  const { params } = ctx;
-  ctx.body = `GET specific messages method with params = ${JSON.stringify(params)}`;
-  next();
-};
-
-const getAllMessages = (ctx, next) => {
-  ctx.body = 'GET all messages method';
-  next();
-};
-
-const postMessages = (ctx, next) => {
-  ctx.body = 'POST messages method';
-  next();
-};
-
-const putMessages = (ctx, next) => {
-  ctx.body = 'PUT messages method';
-  next();
-};
-
-const deleteMessages = (ctx, next) => {
-  ctx.body = 'DELETE messages method';
-  next();
-};
-
 router
   .get('/:id', getMessage)
   .get('/', getAllMessages)
   .post('/', postMessages)
   .put('/', putMessages)
   .delete('/', deleteMessages);
+
+function getMessage(ctx) {
+  try {
+    const { params } = ctx;
+    ctx.body = `GET specific messages method with params = ${JSON.stringify(params)}`;
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function getAllMessages(ctx) {
+  try {
+    ctx.body = 'GET all messages method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function postMessages(ctx) {
+  try {
+    ctx.body = 'POST messages method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function putMessages(ctx) {
+  try {
+    ctx.body = 'PUT messages method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function deleteMessages(ctx) {
+  try {
+    ctx.body = 'DELETE messages method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
 
 module.exports = router;

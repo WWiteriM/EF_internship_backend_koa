@@ -4,37 +4,62 @@ const router = new Router({
   prefix: '/photos',
 });
 
-const getAllPhotos = (ctx, next) => {
-  ctx.body = 'GET all photos method';
-  next();
-};
-
-const getPhoto = (ctx, next) => {
-  const { params } = ctx;
-  ctx.body = `GET specific photos method with params = ${JSON.stringify(params)}`;
-  next();
-};
-
-const postPhotos = (ctx, next) => {
-  ctx.body = ' POST photos method';
-  next();
-};
-
-const putPhotos = (ctx, next) => {
-  ctx.body = 'PUT photos method';
-  next();
-};
-
-const deletePhotos = (ctx, next) => {
-  ctx.body = 'DELETE photos method';
-  next();
-};
-
 router
   .get('/:id', getPhoto)
   .get('/', getAllPhotos)
   .post('/', postPhotos)
   .put('/', putPhotos)
   .delete('/', deletePhotos);
+
+function getAllPhotos(ctx) {
+  try {
+    ctx.body = 'GET all photos method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function getPhoto(ctx) {
+  try {
+    const { params } = ctx;
+    ctx.body = `GET specific photos method with params = ${JSON.stringify(params)}`;
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function postPhotos(ctx) {
+  try {
+    ctx.body = 'POST photos method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function putPhotos(ctx) {
+  try {
+    ctx.body = 'PUT photos method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function deletePhotos(ctx) {
+  try {
+    ctx.body = 'DELETE photos method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
 
 module.exports = router;

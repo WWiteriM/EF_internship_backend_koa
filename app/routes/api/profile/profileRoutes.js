@@ -4,31 +4,51 @@ const router = new Router({
   prefix: '/profile',
 });
 
-const getProfile = (ctx, next) => {
-  const { params } = ctx;
-  ctx.body = `GET specific profile method with params = ${JSON.stringify(params)}`;
-  next();
-};
-
-const postProfile = (ctx, next) => {
-  ctx.body = 'POST profile method';
-  next();
-};
-
-const putProfile = (ctx, next) => {
-  ctx.body = 'PUT profile method';
-  next();
-};
-
-const deleteProfile = (ctx, next) => {
-  ctx.body = 'DELETE profile method';
-  next();
-};
-
 router
   .get('/:id', getProfile)
   .post('/', postProfile)
   .put('/', putProfile)
   .delete('/', deleteProfile);
+
+function getProfile(ctx) {
+  try {
+    const { params } = ctx;
+    ctx.body = `GET specific profile method with params = ${JSON.stringify(params)}`;
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function postProfile(ctx) {
+  try {
+    ctx.body = 'POST profile method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function putProfile(ctx) {
+  try {
+    ctx.body = 'PUT profile method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
+
+function deleteProfile(ctx) {
+  try {
+    ctx.body = 'DELETE profile method';
+    ctx.status = 200;
+  } catch (err) {
+    ctx.status = err.status;
+    ctx.body = err.message;
+  }
+}
 
 module.exports = router;
