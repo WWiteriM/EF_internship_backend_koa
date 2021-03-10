@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      script: 'src/index.js',
+      script: 'index.js',
       watch: true,
       port: 4000,
       env: {
