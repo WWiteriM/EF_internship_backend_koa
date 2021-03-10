@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const apiRouter = require('./app/routes/apiRoutes');
+const apiRouter = require('./app/routes');
 
 const app = new Koa();
 const { PORT } = process.env;

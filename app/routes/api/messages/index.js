@@ -17,7 +17,7 @@ function getMessage(ctx) {
     ctx.body = `GET specific messages method with params = ${JSON.stringify(params)}`;
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -27,7 +27,7 @@ function getAllMessages(ctx) {
     ctx.body = 'GET all messages method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -37,7 +37,7 @@ function postMessages(ctx) {
     ctx.body = 'POST messages method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -47,7 +47,7 @@ function putMessages(ctx) {
     ctx.body = 'PUT messages method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -57,7 +57,7 @@ function deleteMessages(ctx) {
     ctx.body = 'DELETE messages method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }

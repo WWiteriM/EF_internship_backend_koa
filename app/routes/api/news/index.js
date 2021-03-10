@@ -17,7 +17,7 @@ function getNews(ctx) {
     ctx.body = `GET specific news method with params = ${JSON.stringify(params)}`;
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -27,7 +27,7 @@ function getListOfNews(ctx) {
     ctx.body = 'GET all news method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -37,7 +37,7 @@ function postNews(ctx) {
     ctx.body = 'POST news method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -47,7 +47,7 @@ function putNews(ctx) {
     ctx.body = 'PUT news method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -57,7 +57,7 @@ function deleteNews(ctx) {
     ctx.body = 'DELETE news method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }

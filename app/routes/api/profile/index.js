@@ -16,7 +16,7 @@ function getProfile(ctx) {
     ctx.body = `GET specific profile method with params = ${JSON.stringify(params)}`;
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -26,7 +26,7 @@ function postProfile(ctx) {
     ctx.body = 'POST profile method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -36,7 +36,7 @@ function putProfile(ctx) {
     ctx.body = 'PUT profile method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -46,7 +46,7 @@ function deleteProfile(ctx) {
     ctx.body = 'DELETE profile method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }

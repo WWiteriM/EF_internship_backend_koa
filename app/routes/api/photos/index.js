@@ -16,7 +16,7 @@ function getAllPhotos(ctx) {
     ctx.body = 'GET all photos method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -27,7 +27,7 @@ function getPhoto(ctx) {
     ctx.body = `GET specific photos method with params = ${JSON.stringify(params)}`;
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -37,7 +37,7 @@ function postPhotos(ctx) {
     ctx.body = 'POST photos method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -47,7 +47,7 @@ function putPhotos(ctx) {
     ctx.body = 'PUT photos method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -57,7 +57,7 @@ function deletePhotos(ctx) {
     ctx.body = 'DELETE photos method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }

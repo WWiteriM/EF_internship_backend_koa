@@ -17,7 +17,7 @@ function getFriend(ctx) {
     ctx.body = `GET specific friends method with params = ${JSON.stringify(params)}`;
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -27,7 +27,7 @@ function getListOfFriends(ctx) {
     ctx.body = 'GET all friends method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -37,7 +37,7 @@ function postFriend(ctx) {
     ctx.body = 'POST friends method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -47,7 +47,7 @@ function putFriend(ctx) {
     ctx.body = 'PUT friends method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
@@ -57,7 +57,7 @@ function deleteFriend(ctx) {
     ctx.body = 'DELETE friends method';
     ctx.status = 200;
   } catch (err) {
-    ctx.status = err.status;
+    ctx.status = 500;
     ctx.body = err.message;
   }
 }
