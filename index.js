@@ -10,8 +10,8 @@ const { PORT } = process.env;
 
 app.use(cors());
 app.use(logger());
-app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 app.use(json());
 app.use(bodyParser());
+app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 
 app.listen(PORT);
