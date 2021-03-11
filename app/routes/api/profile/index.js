@@ -1,4 +1,8 @@
 const Router = require('koa-router');
+const dbSetup = require('../../../db/db-setup');
+const User = require('../../../db/models/users');
+
+dbSetup();
 
 const router = new Router({
   prefix: '/profile',
@@ -8,12 +12,12 @@ router
   .get('/:id', getProfile)
   .post('/', postProfile)
   .put('/', putProfile)
-  .delete('/', deleteProfile);
+  .delete('/:id', deleteProfile);
 
-function getProfile(ctx) {
+async function getProfile(ctx) {
   try {
-    const { params } = ctx;
-    ctx.body = `GET specific profile method with params = ${JSON.stringify(params)}`;
+    const query = await User.query().where('id', ctx.params.id);
+    ctx.body = JSON.stringify(query);
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;
@@ -41,9 +45,10 @@ function putProfile(ctx) {
   }
 }
 
-function deleteProfile(ctx) {
+async function deleteProfile(ctx) {
   try {
-    ctx.body = 'DELETE profile method';
+    const query = await User.query().delete().where('id', ctx.params.id);
+    ctx.body = `Uninstall completed with code ${query}`;
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;

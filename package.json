@@ -7,18 +7,25 @@
     "start": "pm2 start ecosystem/ecosystem.config.js",
     "delete": "pm2 delete ecosystem/ecosystem.config.js",
     "lint": "eslint \"**/*.js\"",
-    "prettier": "prettier --write **/*.js"
+    "prettier": "prettier --write **/*.js",
+    "migrate": "knex migrate:latest --knexfile ./knexfile.js",
+    "down": "knex migrate:down --knexfile ./knexfile.js",
+    "seed": "knex seed:run --knexfile ./knexfile.js"
   },
   "keywords": [],
   "author": "Arsenii",
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^3.1.0",
+    "dotenv": "^8.2.0",
+    "knex": "^0.95.1",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
-    "koa-router": "^10.0.0"
+    "koa-router": "^10.0.0",
+    "mysql": "^2.18.1",
+    "objection": "^2.2.14"
   },
   "devDependencies": {
     "eslint": "^7.21.0",
