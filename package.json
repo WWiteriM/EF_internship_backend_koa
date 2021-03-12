@@ -8,9 +8,8 @@
     "delete": "pm2 delete ecosystem/ecosystem.config.js",
     "lint": "eslint \"**/*.js\"",
     "prettier": "prettier --write **/*.js",
-    "migrate": "knex migrate:latest --knexfile ./knexfile.js",
-    "down": "knex migrate:down --knexfile ./knexfile.js",
-    "seed": "knex seed:run --knexfile ./knexfile.js"
+    "migrate": "knex migrate:latest --knexfile knex/knexfile.js",
+    "down": "knex migrate:down --knexfile knex/knexfile.js"
   },
   "keywords": [],
   "author": "Arsenii",

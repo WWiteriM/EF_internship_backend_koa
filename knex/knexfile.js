@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 
 module.exports = {
   development: {
@@ -15,10 +15,7 @@ module.exports = {
       max: 10,
     },
     migrations: {
-      directory: `${__dirname}/app/db/migrations`,
-    },
-    seeds: {
-      directory: `${__dirname}/app/db/seeds`,
+      directory: `${__dirname}/migrations`,
     },
   },
 };
