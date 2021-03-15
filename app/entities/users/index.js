@@ -1,7 +1,4 @@
-const dbSetup = require('../../../knex/db-setup');
 const User = require('../../models/users');
-
-dbSetup();
 
 function getProfileById(id) {
   return User.query().where('id', id);
