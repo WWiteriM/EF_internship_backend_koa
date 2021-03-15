@@ -24,7 +24,8 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "mysql": "^2.18.1",
-    "objection": "^2.2.14"
+    "objection": "^2.2.14",
+    "objection-timestamps": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^7.21.0",

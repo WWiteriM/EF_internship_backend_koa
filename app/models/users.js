@@ -1,8 +1,12 @@
-const { Model } = require('objection');
+const timeStamps = require('../db/plagins/timestamps');
 
-class Users extends Model {
+class Users extends timeStamps {
   static get tableName() {
     return 'users';
+  }
+
+  static get timestamp() {
+    return true;
   }
 
   static get idColumn() {
