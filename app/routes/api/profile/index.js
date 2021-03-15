@@ -1,5 +1,10 @@
 const Router = require('koa-router');
-const { getProfileById, deleteProfileById } = require('../../../entities/users/index');
+const {
+  getProfileFunc,
+  addProfileFunc,
+  updateProfileFunc,
+  deleteProfileFunc,
+} = require('../../../entities/users/index');
 
 const router = new Router({
   prefix: '/profile',
@@ -8,12 +13,12 @@ const router = new Router({
 router
   .get('/:id', getProfile)
   .post('/', postProfile)
-  .put('/', putProfile)
+  .put('/:id', putProfile)
   .delete('/:id', deleteProfile);
 
 async function getProfile(ctx) {
   try {
-    const query = await getProfileById(ctx.params.id);
+    const query = await getProfileFunc(ctx.params.id);
     ctx.body = JSON.stringify(query);
     ctx.status = 200;
   } catch (err) {
@@ -22,9 +27,11 @@ async function getProfile(ctx) {
   }
 }
 
-function postProfile(ctx) {
+async function postProfile(ctx) {
   try {
-    ctx.body = 'POST profile method';
+    const params = ctx.request.body;
+    const query = await addProfileFunc(params);
+    ctx.body = JSON.stringify(query);
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;
@@ -32,9 +39,12 @@ function postProfile(ctx) {
   }
 }
 
-function putProfile(ctx) {
+async function putProfile(ctx) {
   try {
-    ctx.body = 'PUT profile method';
+    const { id } = ctx.params;
+    const params = ctx.request.body;
+    const query = await updateProfileFunc(id, params);
+    ctx.body = `Update completed with code ${query}`;
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;
@@ -44,7 +54,7 @@ function putProfile(ctx) {
 
 async function deleteProfile(ctx) {
   try {
-    const query = await deleteProfileById(ctx.params.id);
+    const query = await deleteProfileFunc(ctx.params.id);
     ctx.body = `Uninstall completed with code ${query}`;
     ctx.status = 200;
   } catch (err) {
