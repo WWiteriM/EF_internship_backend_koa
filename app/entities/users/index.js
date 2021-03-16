@@ -1,24 +1,24 @@
 const User = require('../../models/users');
 
-function getProfileFunc(id) {
+function getProfileById(id) {
   return User.query().where('id', id);
 }
 
-function deleteProfileFunc(id) {
+function deleteProfileById(id) {
   return User.query().delete().where('id', id);
 }
 
-function addProfileFunc(params) {
+function addProfile(params) {
   return User.query().insert(params);
 }
 
-function updateProfileFunc(id, params) {
+function updateProfileById(id, params) {
   return User.query().update(params).where('id', id);
 }
 
 module.exports = {
-  getProfileFunc,
-  deleteProfileFunc,
-  addProfileFunc,
-  updateProfileFunc,
+  getProfileById,
+  deleteProfileById,
+  addProfile,
+  updateProfileById,
 };

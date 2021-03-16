@@ -1,12 +1,8 @@
-const timeStamps = require('../db/plagins/timestamps');
+const Parent = require('../db/plagins/index');
 
-class Users extends timeStamps {
+class Users extends Parent {
   static get tableName() {
     return 'users';
-  }
-
-  static get timestamp() {
-    return true;
   }
 
   static get idColumn() {
@@ -27,6 +23,14 @@ class Users extends timeStamps {
 
   static get passwordColumn() {
     return 'password';
+  }
+
+  static get visible() {
+    return ['id', 'name', 'surname', 'email'];
+  }
+
+  static get hidden() {
+    return ['password', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {

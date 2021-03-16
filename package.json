@@ -26,6 +26,7 @@
     "mysql": "^2.18.1",
     "objection": "^2.2.14",
     "objection-timestamps": "^4.0.0",
+    "objection-visibility": "^1.1.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
