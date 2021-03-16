@@ -1,9 +1,8 @@
 module.exports = {
   apps: [
     {
-      script: 'index.js',
+      script: 'usersSchema.js',
       watch: true,
-      port: 3000,
       env: {
         NODE_ENV: 'development',
       },

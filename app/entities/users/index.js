@@ -1,24 +1,25 @@
 const User = require('../../models/users');
 
-function getProfileById(id) {
-  return User.query().where('id', id);
+async function getUserById(id) {
+  const [result] = await User.query().where('id', id);
+  return result;
 }
 
-function deleteProfileById(id) {
-  return User.query().delete().where('id', id);
+async function deleteUserById(id) {
+  await User.query().delete().where('id', id);
 }
 
-function addProfile(params) {
-  return User.query().insert(params);
+async function addUser(params) {
+  await User.query().insert(params);
 }
 
-function updateProfileById(id, params) {
-  return User.query().update(params).where('id', id);
+async function updateUserById(id, params) {
+  await User.query().update(params).where('id', id);
 }
 
 module.exports = {
-  getProfileById,
-  deleteProfileById,
-  addProfile,
-  updateProfileById,
+  getUserById,
+  deleteUserById,
+  addUser,
+  updateUserById,
 };

@@ -9,10 +9,10 @@ const timestamp = timestampPlugin({
 
 const mixins = compose(timestamp, visibilityPlugin);
 
-class Parent extends mixins(Model) {
+class BaseModel extends mixins(Model) {
   static get timestamp() {
     return true;
   }
 }
 
-module.exports = Parent;
+module.exports = BaseModel;

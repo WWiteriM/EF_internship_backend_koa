@@ -3,12 +3,12 @@ const friends = require('./api/friends');
 const messages = require('./api/messages');
 const news = require('./api/news');
 const photos = require('./api/photos');
-const profile = require('./api/profile');
+const users = require('./api/users');
 
 const router = new Router({
   prefix: '/api',
 });
 
-router.use(friends.routes(), messages.routes(), news.routes(), photos.routes(), profile.routes());
+router.use(friends.routes(), messages.routes(), news.routes(), photos.routes(), users.routes());
 
 module.exports = router;

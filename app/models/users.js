@@ -1,6 +1,6 @@
-const Parent = require('../db/plagins/index');
+const BaseModel = require('../db/baseModel/index');
 
-class Users extends Parent {
+class Users extends BaseModel {
   static get tableName() {
     return 'users';
   }
