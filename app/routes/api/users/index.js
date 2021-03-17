@@ -14,13 +14,16 @@ router
   .delete('/:id', deleteProfile);
 
 async function getProfile(ctx) {
+  // eslint-disable-next-line no-useless-catch
   try {
-    const query = await User.getUserById(ctx.params.id);
-    ctx.body = JSON.stringify(query);
-    ctx.status = 200;
+    const { id } = ctx.params;
+    const query = await User.getUserById(id);
+    if (query) {
+      ctx.body = query;
+      ctx.status = 200;
+    }
   } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
+    throw err;
   }
 }
 
@@ -28,7 +31,7 @@ async function postProfile(ctx) {
   try {
     const params = ctx.request.body;
     const query = await User.addUser(params);
-    ctx.body = JSON.stringify(query);
+    ctx.body = query;
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;
@@ -41,7 +44,7 @@ async function putProfile(ctx) {
     const { id } = ctx.params;
     const params = ctx.request.body;
     const query = await User.updateUserById(id, params);
-    ctx.body = JSON.stringify(query);
+    ctx.body = query;
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;
@@ -52,7 +55,7 @@ async function putProfile(ctx) {
 async function deleteProfile(ctx) {
   try {
     const query = await User.deleteUserById(ctx.params.id);
-    ctx.body = JSON.stringify(query);
+    ctx.body = query;
     ctx.status = 200;
   } catch (err) {
     ctx.status = 500;

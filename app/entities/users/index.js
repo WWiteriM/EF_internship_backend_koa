@@ -6,7 +6,7 @@ async function getUserById(id) {
 }
 
 async function deleteUserById(id) {
-  await User.query().delete().where('id', id);
+  await User.query().delete().findById(id);
 }
 
 async function addUser(params) {
@@ -14,7 +14,7 @@ async function addUser(params) {
 }
 
 async function updateUserById(id, params) {
-  await User.query().update(params).where('id', id);
+  await User.query().update(params).findById(id);
 }
 
 module.exports = {
