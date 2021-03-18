@@ -1,7 +1,11 @@
 const User = require('../../models/users');
+const ErrorService = require('../../middleware/error/errorServices');
 
 async function getUserById(id) {
-  const [result] = await User.query().where('id', id);
+  const result = await User.query().findById(id);
+  if (!result) {
+    throw ErrorService.errorThrow(404);
+  }
   return result;
 }
 

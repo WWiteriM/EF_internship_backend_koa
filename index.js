@@ -5,14 +5,14 @@ const bodyParser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const cors = require('@koa/cors');
 const dbSetup = require('./knex/db-setup');
-const errorHandler = require('./app/middleware/error/errorHandler');
+const errorService = require('./app/middleware/error/errorServices');
 const apiRouter = require('./app/routes');
 
 const app = new Koa();
 const { PORT } = process.env;
 
 dbSetup();
-app.use(errorHandler());
+app.use(errorService.errorHandler());
 app.use(cors());
 app.use(logger());
 app.use(json());

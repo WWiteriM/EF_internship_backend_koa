@@ -1,7 +1,6 @@
 const Router = require('koa-router');
 const User = require('../../../entities/users/index');
-const { addUserSchema, updateUserSchema } = require('./usersSchema');
-const { usersAddValidation, usersUpdateValidation } = require('./usersValidateDto');
+const { validate, updateSchema, registerSchema } = require('./validation');
 
 const router = new Router({
   prefix: '/users',
@@ -9,22 +8,15 @@ const router = new Router({
 
 router
   .get('/:id', getProfile)
-  .post('/', usersAddValidation(addUserSchema), postProfile)
-  .put('/:id', usersUpdateValidation(updateUserSchema), putProfile)
+  .post('/', validate(registerSchema), postProfile)
+  .put('/:id', validate(updateSchema), putProfile)
   .delete('/:id', deleteProfile);
 
 async function getProfile(ctx) {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const { id } = ctx.params;
-    const query = await User.getUserById(id);
-    if (query) {
-      ctx.body = query;
-      ctx.status = 200;
-    }
-  } catch (err) {
-    throw err;
-  }
+  const { id } = ctx.params;
+  const query = await User.getUserById(id);
+  ctx.body = query;
+  ctx.status = 200;
 }
 
 async function postProfile(ctx) {
