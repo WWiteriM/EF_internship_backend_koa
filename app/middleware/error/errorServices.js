@@ -3,20 +3,19 @@ const Error404 = require('./Error404');
 const Error500 = require('./Error500');
 
 function errorHandler() {
-  // eslint-disable-next-line func-names
-  return async function (ctx, next) {
+  return async (ctx, next) => {
     try {
       await next();
     } catch (err) {
       if (err instanceof Error400) {
         ctx.status = err.code;
-        ctx.body = err.message || 'Something wrong with 400 error';
+        ctx.body = err.message;
       } else if (err instanceof Error404) {
         ctx.status = err.code;
-        ctx.body = err.message || 'Something wrong with 404 error';
+        ctx.body = err.message;
       } else {
         ctx.status = err.code;
-        ctx.body = err.message || 'Something wrong with 500 error';
+        ctx.body = err.message;
       }
     }
   };

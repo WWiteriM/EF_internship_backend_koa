@@ -25,17 +25,22 @@ async function addUser(params) {
   await User.query().insert(params);
 }
 
-async function updateUserById(id, params) {
-  const result = User.query().findById(id);
+async function updateUserById(id, body) {
+  const result = await User.query().findById(id);
   if (!result) {
     throw ErrorService.errorThrow(404);
   }
+  const name = body.name || result.name;
+  const surname = body.surname || result.surname;
+  const email = body.email || result.email;
+  const password = body.password || result.password;
+
   await User.query()
     .update({
-      name: `${params.name}`,
-      surname: `${params.surname}`,
-      email: `${params.email}`,
-      password: `${params.password}`,
+      name,
+      surname,
+      email,
+      password,
     })
     .findById(id);
 }
