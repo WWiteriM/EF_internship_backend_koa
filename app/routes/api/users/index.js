@@ -14,45 +14,26 @@ router
 
 async function getProfile(ctx) {
   const { id } = ctx.params;
-  const query = await User.getUserById(id);
-  ctx.body = query;
+  ctx.body = await User.getUserById(id);
   ctx.status = 200;
 }
 
 async function postProfile(ctx) {
-  try {
-    const params = ctx.request.body;
-    const query = await User.addUser(params);
-    ctx.body = query;
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+  const params = ctx.request.body;
+  ctx.body = await User.addUser(params);
+  ctx.status = 200;
 }
 
 async function putProfile(ctx) {
-  try {
-    const { id } = ctx.params;
-    const params = ctx.request.body;
-    const query = await User.updateUserById(id, params);
-    ctx.body = query;
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+  const { id } = ctx.params;
+  const params = ctx.request.body;
+  ctx.body = await User.updateUserById(id, params);
+  ctx.status = 200;
 }
 
 async function deleteProfile(ctx) {
-  try {
-    const query = await User.deleteUserById(ctx.params.id);
-    ctx.body = query;
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+  ctx.body = await User.deleteUserById(ctx.params.id);
+  ctx.status = 200;
 }
 
 module.exports = router;

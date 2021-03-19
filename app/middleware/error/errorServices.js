@@ -10,13 +10,13 @@ function errorHandler() {
     } catch (err) {
       if (err instanceof Error400) {
         ctx.status = err.code;
-        ctx.body = err.message ? err.message : 'Something wrong with 400 error';
+        ctx.body = err.message || 'Something wrong with 400 error';
       } else if (err instanceof Error404) {
         ctx.status = err.code;
-        ctx.body = err.message ? err.message : 'Something wrong with 404 error';
+        ctx.body = err.message || 'Something wrong with 404 error';
       } else {
         ctx.status = err.code;
-        ctx.body = err.message ? err.message : 'Something wrong with 500 error';
+        ctx.body = err.message || 'Something wrong with 500 error';
       }
     }
   };
