@@ -14,8 +14,8 @@ function errorHandler() {
         ctx.status = err.code;
         ctx.body = err.message;
       } else {
-        ctx.status = err.code;
-        ctx.body = err.message;
+        ctx.status = 500;
+        ctx.body = 'Bad Request';
       }
     }
   };

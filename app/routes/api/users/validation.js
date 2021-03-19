@@ -17,10 +17,14 @@ const updateSchema = yup.object().shape({
 
 function validate(schema) {
   return async (ctx, next) => {
+    // eslint-disable-next-line no-useless-catch
     try {
       await schema.validate(ctx.request.body);
       await next();
     } catch (err) {
+      if (err.code === 404) {
+        throw err;
+      }
       throw ErrorService.errorThrow(400);
     }
   };
