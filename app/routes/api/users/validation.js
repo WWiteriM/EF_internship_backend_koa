@@ -1,4 +1,5 @@
 const yup = require('yup');
+const Error404 = require('../../../middleware/error/Error404');
 const ErrorService = require('../../../middleware/error/errorServices');
 
 const registerSchema = yup.object().shape({
@@ -22,8 +23,8 @@ function validate(schema) {
       await schema.validate(ctx.request.body);
       await next();
     } catch (err) {
-      if (err.code === 404) {
-        throw err;
+      if (err instanceof Error404) {
+        throw ErrorService.errorThrow(404);
       }
       throw ErrorService.errorThrow(400);
     }

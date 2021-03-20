@@ -7,16 +7,8 @@ function errorHandler() {
     try {
       await next();
     } catch (err) {
-      if (err instanceof Error400) {
-        ctx.status = err.code;
-        ctx.body = err.message;
-      } else if (err instanceof Error404) {
-        ctx.status = err.code;
-        ctx.body = err.message;
-      } else {
-        ctx.status = 500;
-        ctx.body = 'Bad Request';
-      }
+      ctx.status = err.code;
+      ctx.body = err.message;
     }
   };
 }
