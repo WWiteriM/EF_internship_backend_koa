@@ -3,7 +3,6 @@ module.exports = {
     {
       script: 'index.js',
       watch: true,
-      port: 4000,
       env: {
         NODE_ENV: 'development',
       },
