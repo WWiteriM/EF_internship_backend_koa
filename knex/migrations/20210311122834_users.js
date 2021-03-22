@@ -1,3 +1,4 @@
+// eslint-disable-next-line func-names
 exports.up = function (knex) {
   return knex.schema.createTable('users', (table) => {
     table.increments();
@@ -10,6 +11,7 @@ exports.up = function (knex) {
   });
 };
 
+// eslint-disable-next-line func-names
 exports.down = function (knex) {
   return knex.schema.dropTableIfExists('users');
 };
