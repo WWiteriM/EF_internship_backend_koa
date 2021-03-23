@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
 const { validate, updateSchema, registerSchema } = require('./validation');
@@ -11,8 +12,8 @@ router
   .get('/:id', getProfile)
   .post('/register', validate(registerSchema), register)
   .post('/login', login)
-  .put('/:id', validate(updateSchema), putProfile)
-  .delete('/:id', deleteProfile);
+  .put('/:id', passport.authenticate('jwt', { session: false }), validate(updateSchema), putProfile)
+  .delete('/:id', passport.authenticate('jwt', { session: false }), deleteProfile);
 
 async function getProfile(ctx) {
   const { id } = ctx.params;

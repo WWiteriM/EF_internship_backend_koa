@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../../models/users');
 const ErrorService = require('../../middleware/error/errorServices');
 
@@ -25,7 +26,9 @@ async function updateUserById(id, body) {
   const name = body.name || result.name;
   const surname = body.surname || result.surname;
   const email = body.email || result.email;
-  const password = body.password || result.password;
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+  const hash = await bcrypt.hash(body.password, salt);
+  const password = hash || result.password;
 
   await User.query()
     .update({

@@ -8,7 +8,7 @@ async function registerUser(body) {
   if (user) {
     throw ErrorService.errorThrow(400);
   }
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
   const hash = await bcrypt.hash(body.password, salt);
   await User.query().insert({
     name: body.name,
@@ -27,8 +27,6 @@ async function loginUser(body) {
   if (isMatch) {
     const payload = {
       id: user.id,
-      name: user.name,
-      surname: user.surname,
       email: user.email,
     };
     return jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
