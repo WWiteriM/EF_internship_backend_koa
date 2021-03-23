@@ -17,14 +17,6 @@ async function deleteUserById(id) {
   await User.query().delete().findById(id);
 }
 
-async function addUser(params) {
-  const result = await User.query().findById(params.id);
-  if (result) {
-    throw ErrorService.errorThrow(400);
-  }
-  await User.query().insert(params);
-}
-
 async function updateUserById(id, body) {
   const result = await User.query().findById(id);
   if (!result) {
@@ -48,6 +40,5 @@ async function updateUserById(id, body) {
 module.exports = {
   getUserById,
   deleteUserById,
-  addUser,
   updateUserById,
 };
