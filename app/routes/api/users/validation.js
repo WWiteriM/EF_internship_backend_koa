@@ -16,6 +16,10 @@ const updateSchema = yup.object().shape({
   password: yup.string().min(4).max(20),
 });
 
+const mailSchema = yup.object().shape({
+  email: yup.string().email(),
+});
+
 function validate(schema) {
   return async (ctx, next) => {
     try {
@@ -30,4 +34,9 @@ function validate(schema) {
   };
 }
 
-module.exports = { registerSchema, updateSchema, validate };
+module.exports = {
+  registerSchema,
+  updateSchema,
+  mailSchema,
+  validate,
+};

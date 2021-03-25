@@ -40,8 +40,17 @@ async function updateUserById(id, body) {
     .findById(id);
 }
 
+async function findUserByMail(body) {
+  const user = await User.query().findOne({ email: body.email });
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  return user;
+}
+
 module.exports = {
   getUserById,
   deleteUserById,
   updateUserById,
+  findUserByMail,
 };

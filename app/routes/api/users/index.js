@@ -1,8 +1,9 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
+const transporter = require('../../../services/email/email-config');
 const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
-const { validate, updateSchema, registerSchema } = require('./validation');
+const { validate, updateSchema, registerSchema, mailSchema } = require('./validation');
 
 const router = new Router({
   prefix: '/users',
@@ -12,6 +13,7 @@ router
   .get('/:id', getProfile)
   .post('/register', validate(registerSchema), register)
   .post('/login', login)
+  .post('/send', validate(mailSchema), sendMail)
   .put('/:id', passport.authenticate('jwt', { session: false }), validate(updateSchema), putProfile)
   .delete('/:id', passport.authenticate('jwt', { session: false }), deleteProfile);
 
@@ -41,9 +43,21 @@ async function register(ctx) {
 
 async function login(ctx) {
   const params = ctx.request.body;
-  const token = await Auth.loginUser(params);
-  ctx.set('Authorization', `Bearer ${token}`);
-  ctx.body = { token: `Bearer ${token}` };
+  ctx.body = await Auth.loginUser(params);
+  ctx.status = 200;
+}
+
+async function sendMail(ctx) {
+  const params = ctx.request.body;
+  const user = await User.findUserByMail(params);
+  const mailOptions = {
+    from: 'Effective Soft',
+    to: `${user.email}`,
+    subject: 'Hello from EffectiveSoft Internship',
+    text: `Hello ${user.name}, this message was sent from the server of the internship project`,
+  };
+
+  await transporter.sendMail(mailOptions);
   ctx.status = 200;
 }
 
