@@ -10,47 +10,52 @@ async function getUserById(id) {
   return result;
 }
 
-async function deleteUserById(id) {
-  const result = await User.query().findById(id);
+async function deleteUser(body) {
+  const result = await User.query().findOne({ email: body.email });
   if (!result) {
     throw ErrorService.errorThrow(404);
   }
-  await User.query().delete().findById(id);
+  await User.query().delete().findOne({ email: body.email });
 }
 
-async function updateUserById(id, body) {
-  const result = await User.query().findById(id);
+async function updateUser(body) {
+  const result = await User.query().findOne({ email: body.email });
   if (!result) {
     throw ErrorService.errorThrow(404);
   }
   const name = body.name || result.name;
   const surname = body.surname || result.surname;
-  const email = body.email || result.email;
-  const salt = await bcrypt.genSalt(Number(process.env.SALT));
-  const hash = await bcrypt.hash(body.password, salt);
-  const password = hash || result.password;
 
   await User.query()
     .update({
       name,
       surname,
-      email,
-      password,
     })
-    .findById(id);
+    .findOne({ email: body.email });
 }
 
-async function findUserByMail(body) {
+async function updatePassword(body) {
   const user = await User.query().findOne({ email: body.email });
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  return user;
+  const isMatch = await bcrypt.compare(body.password, user.password);
+  if (!isMatch) {
+    throw ErrorService.errorThrow(400);
+  }
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+  const password = await bcrypt.hash(body.newPassword, salt);
+
+  await User.query()
+    .update({
+      password,
+    })
+    .findOne({ email: body.email });
 }
 
 module.exports = {
   getUserById,
-  deleteUserById,
-  updateUserById,
-  findUserByMail,
+  deleteUser,
+  updateUser,
+  updatePassword,
 };

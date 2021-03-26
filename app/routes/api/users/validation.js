@@ -9,14 +9,20 @@ const registerSchema = yup.object().shape({
   password: yup.string().min(4).max(20).required(),
 });
 
-const updateSchema = yup.object().shape({
+const updateUserInfoSchema = yup.object().shape({
   name: yup.string().trim(),
   surname: yup.string().trim(),
   email: yup.string().email(),
   password: yup.string().min(4).max(20),
 });
 
-const mailSchema = yup.object().shape({
+const updatePasswordSchema = yup.object().shape({
+  email: yup.string().email(),
+  password: yup.string().min(4).max(20),
+  newPassword: yup.string().min(4).max(20),
+});
+
+const deleteUserSchema = yup.object().shape({
   email: yup.string().email(),
 });
 
@@ -36,7 +42,8 @@ function validate(schema) {
 
 module.exports = {
   registerSchema,
-  updateSchema,
-  mailSchema,
+  updateUserInfoSchema,
+  updatePasswordSchema,
+  deleteUserSchema,
   validate,
 };
