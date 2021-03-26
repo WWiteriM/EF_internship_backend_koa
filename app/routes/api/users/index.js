@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
-const transporter = require('../../../services/email/email-config');
+const mailer = require('../../../services/email');
 const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
 const { validate, updateSchema, registerSchema, mailSchema } = require('./validation');
@@ -38,6 +38,7 @@ async function deleteProfile(ctx) {
 async function register(ctx) {
   const params = ctx.request.body;
   ctx.body = await Auth.registerUser(params);
+  await mailer(params);
   ctx.status = 201;
 }
 
@@ -50,14 +51,7 @@ async function login(ctx) {
 async function sendMail(ctx) {
   const params = ctx.request.body;
   const user = await User.findUserByMail(params);
-  const mailOptions = {
-    from: 'Effective Soft',
-    to: `${user.email}`,
-    subject: 'Hello from EffectiveSoft Internship',
-    text: `Hello ${user.name}, this message was sent from the server of the internship project`,
-  };
-
-  await transporter.sendMail(mailOptions);
+  await mailer(user);
   ctx.status = 200;
 }
 
