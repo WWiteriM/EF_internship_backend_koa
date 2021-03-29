@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
+const registrationMailer = require('../../../services/email/index');
 const {
   validate,
   updateUserInfoSchema,
@@ -18,6 +19,7 @@ router
   .get('/:id', getProfile)
   .post('/register', validate(registerSchema), register)
   .post('/login', login)
+  .post('/send', sendMail)
   .put(
     '/updateUserInfo',
     passport.authenticate('jwt', { session: false }),
@@ -70,6 +72,13 @@ async function register(ctx) {
 async function login(ctx) {
   const params = ctx.request.body;
   ctx.body = await Auth.loginUser(params);
+  ctx.status = 200;
+}
+
+// API для теста отправки email сообщения (необходимо потом удалить)
+async function sendMail(ctx) {
+  const params = ctx.request.body;
+  await registrationMailer(params);
   ctx.status = 200;
 }
 
