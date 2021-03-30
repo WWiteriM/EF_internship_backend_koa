@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/users');
 const ErrorService = require('../../middleware/error/errorServices');
-const registrationMailer = require('../../services/email/index');
+const { registrationMailer } = require('../../services/email/index');
 
 async function registerUser(body) {
   const user = await User.query().findOne({ email: body.email });

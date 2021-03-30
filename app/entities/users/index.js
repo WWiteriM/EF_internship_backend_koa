@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../../models/users');
+const { recoveryMailer } = require('../../services/email/index');
 const ErrorService = require('../../middleware/error/errorServices');
 
 async function getUserById(id) {
@@ -53,9 +55,27 @@ async function updatePassword(body) {
     .findOne({ email: body.email });
 }
 
+async function recoverPassword(body) {
+  const user = await User.query().findOne({ email: body.email });
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  const payload = {
+    email: user.email,
+  };
+  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+  await recoveryMailer(user, token);
+  await User.query()
+    .update({
+      token,
+    })
+    .findOne({ email: body.email });
+}
+
 module.exports = {
   getUserById,
   deleteUser,
   updateUser,
   updatePassword,
+  recoverPassword,
 };

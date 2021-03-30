@@ -30,7 +30,7 @@ class Users extends BaseModel {
   }
 
   static get hidden() {
-    return ['password', 'createdAt', 'updatedAt'];
+    return ['password', 'token', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {

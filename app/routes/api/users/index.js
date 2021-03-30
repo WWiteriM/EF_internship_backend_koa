@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
-const registrationMailer = require('../../../services/email/index');
+const { registrationMailer } = require('../../../services/email/index');
 const {
   validate,
   updateUserInfoSchema,
@@ -17,8 +17,9 @@ const router = new Router({
 
 router
   .get('/:id', getProfile)
-  .post('/register', validate(registerSchema), register)
+  .post('/registration', validate(registerSchema), registration)
   .post('/login', login)
+  .post('/recovery', recovery)
   .post('/send', sendMail)
   .put(
     '/updateUserInfo',
@@ -63,7 +64,7 @@ async function deleteProfile(ctx) {
   ctx.status = 200;
 }
 
-async function register(ctx) {
+async function registration(ctx) {
   const params = ctx.request.body;
   ctx.body = await Auth.registerUser(params);
   ctx.status = 201;
@@ -72,6 +73,12 @@ async function register(ctx) {
 async function login(ctx) {
   const params = ctx.request.body;
   ctx.body = await Auth.loginUser(params);
+  ctx.status = 200;
+}
+
+async function recovery(ctx) {
+  const params = ctx.request.body;
+  ctx.body = await User.recoverPassword(params);
   ctx.status = 200;
 }
 

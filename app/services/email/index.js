@@ -16,13 +16,17 @@ const transporter = nodemailer.createTransport({
 async function createMustacheFiles() {
   const template = await fs.readFile(`${__dirname}/mustache/templates/template.html`);
   const header = await fs.readFile(`${__dirname}/mustache/components/header.html`);
-  const body = await fs.readFile(`${__dirname}/mustache/components/body.html`);
+  const registrationBody = await fs.readFile(
+    `${__dirname}/mustache/components/registrationBody.html`,
+  );
+  const recoveryBody = await fs.readFile(`${__dirname}/mustache/components/recoveryBody.html`);
   const footer = await fs.readFile(`${__dirname}/mustache/components/footer.html`);
 
   const mustacheFiles = {
     template: template.toString(),
     header: header.toString(),
-    body: body.toString(),
+    registrationBody: registrationBody.toString(),
+    recoveryBody: recoveryBody.toString(),
     footer: footer.toString(),
   };
 
@@ -33,7 +37,7 @@ async function createMustacheFiles() {
 }
 
 async function registrationMailer(params) {
-  const { template, header, body, footer } = await createMustacheFiles();
+  const { template, header, registrationBody, footer } = await createMustacheFiles();
   const { email, name, surname } = params;
 
   await transporter.sendMail({
@@ -41,8 +45,21 @@ async function registrationMailer(params) {
     to: `${email}`,
     subject: 'Hello from EffectiveSoft Internship',
     text: `Hello ${name}`,
-    html: Mustache.render(template, { email, name, surname }, { header, body, footer }),
+    html: Mustache.render(template, { email, name, surname }, { header, registrationBody, footer }),
   });
 }
 
-module.exports = registrationMailer;
+async function recoveryMailer(params, token) {
+  const { template, header, recoveryBody, footer } = await createMustacheFiles();
+  const { email } = params;
+
+  await transporter.sendMail({
+    from: `"Effective Soft" <${process.env.MAIL}>`,
+    to: `${email}`,
+    subject: 'Password recovery',
+    text: 'Hello from EF-soft',
+    html: Mustache.render(template, { email, token }, { header, recoveryBody, footer }),
+  });
+}
+
+module.exports = { registrationMailer, recoveryMailer };
