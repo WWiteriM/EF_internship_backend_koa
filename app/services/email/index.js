@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
-const fs = require('fs');
-// const Mustache = require('mustache');
+const fs = require('fs').promises;
+const Mustache = require('mustache');
 const ErrorService = require('../../middleware/error/errorServices');
 
 const transporter = nodemailer.createTransport({
@@ -13,38 +13,36 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mustacheFiles = {
-  header: fs.readFile(`${__dirname}/mustache/header.html`, 'utf8', (err, data) => {
-    if (err) {
-      throw ErrorService.errorThrow(500);
-    }
-    return data.toString();
-  }),
-  htmlBody: fs.readFile(`${__dirname}/mustache/registrationBody.html`, 'utf8', (err, data) => {
-    if (err) {
-      throw ErrorService.errorThrow(500);
-    }
-    return data.toString();
-  }),
-  footer: fs.readFile(`${__dirname}/mustache/footer.html`, 'utf8', (err, data) => {
-    if (err) {
-      throw ErrorService.errorThrow(500);
-    }
-    return data.toString();
-  }),
-};
+async function createMustacheFiles() {
+  const template = await fs.readFile(`${__dirname}/mustache/templates/template.html`);
+  const header = await fs.readFile(`${__dirname}/mustache/components/header.html`);
+  const body = await fs.readFile(`${__dirname}/mustache/components/body.html`);
+  const footer = await fs.readFile(`${__dirname}/mustache/components/footer.html`);
 
-async function registrationMailer(body) {
-  const { header, htmlBody, footer } = mustacheFiles;
-  const mailOptions = {
-    from: `"Effective Soft" <${process.env.MAIL}>`,
-    to: `${body.email}`,
-    subject: 'Hello from EffectiveSoft Internship',
-    text: `Hello ${body.name}, ${htmlBody}, ${footer}, ${header}!`,
-    // html: Mustache.render({ header, htmlBody, footer }, body),
+  const mustacheFiles = {
+    template: template.toString(),
+    header: header.toString(),
+    body: body.toString(),
+    footer: footer.toString(),
   };
 
-  await transporter.sendMail(mailOptions);
+  if (!mustacheFiles) {
+    throw ErrorService.errorThrow(500);
+  }
+  return mustacheFiles;
+}
+
+async function registrationMailer(params) {
+  const { template, header, body, footer } = await createMustacheFiles();
+  const { email, name, surname } = params;
+
+  await transporter.sendMail({
+    from: `"Effective Soft" <${process.env.MAIL}>`,
+    to: `${email}`,
+    subject: 'Hello from EffectiveSoft Internship',
+    text: `Hello ${name}`,
+    html: Mustache.render(template, { email, name, surname }, { header, body, footer }),
+  });
 }
 
 module.exports = registrationMailer;
