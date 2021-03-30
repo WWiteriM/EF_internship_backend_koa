@@ -72,10 +72,29 @@ async function recoverPassword(body) {
     .findOne({ email: body.email });
 }
 
+// async function addNewPassword(body, query) {
+//   const token = query.token.toString();
+//   const email = query.email.toString();
+//   const user = await User.query().findOne({ token, email });
+//   if (!user) {
+//     throw ErrorService.errorThrow(404);
+//   }
+//   const salt = await bcrypt.genSalt(Number(process.env.SALT));
+//   const password = await bcrypt.hash(body.newPassword, salt);
+//
+//   await User.query()
+//     .update({
+//       token: null,
+//       password,
+//     })
+//     .findOne({ email });
+// }
+
 module.exports = {
   getUserById,
   deleteUser,
   updateUser,
   updatePassword,
   recoverPassword,
+  // addNewPassword,
 };

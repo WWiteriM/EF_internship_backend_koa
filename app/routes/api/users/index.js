@@ -33,6 +33,7 @@ router
     validate(updatePasswordSchema),
     updatePassword,
   )
+  // .put('/passwordRecovery', passwordRecovery)
   .delete(
     '/deleteUser',
     passport.authenticate('jwt', { session: false }),
@@ -81,6 +82,13 @@ async function recovery(ctx) {
   ctx.body = await User.recoverPassword(params);
   ctx.status = 200;
 }
+
+// async function passwordRecovery(ctx) {
+//   const query = ctx.params;
+//   const params = ctx.request.body;
+//   ctx.body = await User.addNewPassword(params, query);
+//   ctx.status = 200;
+// }
 
 // API для теста отправки email сообщения (необходимо потом удалить)
 async function sendMail(ctx) {
