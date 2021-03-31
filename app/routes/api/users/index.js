@@ -7,7 +7,9 @@ const {
   updateUserInfoSchema,
   registerSchema,
   updatePasswordSchema,
-  deleteUserSchema,
+  passwordRecoverySchema,
+  loginSchema,
+  checkingMailSchema,
 } = require('./validation');
 
 const router = new Router({
@@ -17,8 +19,8 @@ const router = new Router({
 router
   .get('/:id', getProfile)
   .post('/registration', validate(registerSchema), registration)
-  .post('/login', login)
-  .post('/recovery', recovery)
+  .post('/login', validate(loginSchema), login)
+  .post('/recovery', validate(checkingMailSchema), recovery)
   .put(
     '/updateUserInfo',
     passport.authenticate('jwt', { session: false }),
@@ -31,11 +33,11 @@ router
     validate(updatePasswordSchema),
     updatePassword,
   )
-  .put('/passwordRecovery/:email/:token', passwordRecovery)
+  .put('/passwordRecovery/:email/:token', validate(passwordRecoverySchema), passwordRecovery)
   .delete(
     '/deleteUser',
     passport.authenticate('jwt', { session: false }),
-    validate(deleteUserSchema),
+    validate(checkingMailSchema),
     deleteProfile,
   );
 

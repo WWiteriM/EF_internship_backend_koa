@@ -12,18 +12,26 @@ const registerSchema = yup.object().shape({
 const updateUserInfoSchema = yup.object().shape({
   name: yup.string().trim(),
   surname: yup.string().trim(),
-  email: yup.string().email(),
-  password: yup.string().min(4).max(20),
+  email: yup.string().email().required(),
 });
 
 const updatePasswordSchema = yup.object().shape({
-  email: yup.string().email(),
-  password: yup.string().min(4).max(20),
-  newPassword: yup.string().min(4).max(20),
+  email: yup.string().email().required(),
+  password: yup.string().min(4).max(20).required(),
+  newPassword: yup.string().min(4).max(20).required(),
 });
 
-const deleteUserSchema = yup.object().shape({
-  email: yup.string().email(),
+const checkingMailSchema = yup.object().shape({
+  email: yup.string().email().required(),
+});
+
+const loginSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().min(4).max(20).required(),
+});
+
+const passwordRecoverySchema = yup.object().shape({
+  newPassword: yup.string().min(4).max(20).required(),
 });
 
 function validate(schema) {
@@ -44,6 +52,8 @@ module.exports = {
   registerSchema,
   updateUserInfoSchema,
   updatePasswordSchema,
-  deleteUserSchema,
+  checkingMailSchema,
+  loginSchema,
+  passwordRecoverySchema,
   validate,
 };
