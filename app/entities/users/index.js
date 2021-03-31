@@ -62,6 +62,7 @@ async function recoverPassword(body) {
   }
   const payload = {
     email: user.email,
+    updatedAt: user.updatedAt,
   };
   const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
   await recoveryMailer(user, token);
@@ -72,23 +73,21 @@ async function recoverPassword(body) {
     .findOne({ email: body.email });
 }
 
-// async function addNewPassword(body, query) {
-//   const token = query.token.toString();
-//   const email = query.email.toString();
-//   const user = await User.query().findOne({ token, email });
-//   if (!user) {
-//     throw ErrorService.errorThrow(404);
-//   }
-//   const salt = await bcrypt.genSalt(Number(process.env.SALT));
-//   const password = await bcrypt.hash(body.newPassword, salt);
-//
-//   await User.query()
-//     .update({
-//       token: null,
-//       password,
-//     })
-//     .findOne({ email });
-// }
+async function addNewPassword(body, query) {
+  const user = await User.query().findOne({ token: query.token, email: query.email });
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+  const password = await bcrypt.hash(body.newPassword, salt);
+
+  await User.query()
+    .update({
+      token: null,
+      password,
+    })
+    .findOne({ email: query.email });
+}
 
 module.exports = {
   getUserById,
@@ -96,5 +95,5 @@ module.exports = {
   updateUser,
   updatePassword,
   recoverPassword,
-  // addNewPassword,
+  addNewPassword,
 };

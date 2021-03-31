@@ -2,7 +2,6 @@ const Router = require('koa-router');
 const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
-const { registrationMailer } = require('../../../services/email/index');
 const {
   validate,
   updateUserInfoSchema,
@@ -20,7 +19,6 @@ router
   .post('/registration', validate(registerSchema), registration)
   .post('/login', login)
   .post('/recovery', recovery)
-  .post('/send', sendMail)
   .put(
     '/updateUserInfo',
     passport.authenticate('jwt', { session: false }),
@@ -33,7 +31,7 @@ router
     validate(updatePasswordSchema),
     updatePassword,
   )
-  // .put('/passwordRecovery', passwordRecovery)
+  .put('/passwordRecovery/:email/:token', passwordRecovery)
   .delete(
     '/deleteUser',
     passport.authenticate('jwt', { session: false }),
@@ -83,17 +81,10 @@ async function recovery(ctx) {
   ctx.status = 200;
 }
 
-// async function passwordRecovery(ctx) {
-//   const query = ctx.params;
-//   const params = ctx.request.body;
-//   ctx.body = await User.addNewPassword(params, query);
-//   ctx.status = 200;
-// }
-
-// API для теста отправки email сообщения (необходимо потом удалить)
-async function sendMail(ctx) {
+async function passwordRecovery(ctx) {
+  const query = ctx.params;
   const params = ctx.request.body;
-  await registrationMailer(params);
+  ctx.body = await User.addNewPassword(params, query);
   ctx.status = 200;
 }
 
