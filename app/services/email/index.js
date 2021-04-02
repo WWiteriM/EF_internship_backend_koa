@@ -14,7 +14,8 @@ const transporter = nodemailer.createTransport({
 });
 
 function createMustacheFiles() {
-  const template = fs.readFileSync(`${__dirname}/mustache/templates/template.html`);
+  const recovery = fs.readFileSync(`${__dirname}/mustache/templates/recovery.html`);
+  const registration = fs.readFileSync(`${__dirname}/mustache/templates/registration.html`);
   const header = fs.readFileSync(`${__dirname}/mustache/components/header.html`);
   const registrationBody = fs.readFileSync(
     `${__dirname}/mustache/components/registrationBody.html`,
@@ -23,7 +24,8 @@ function createMustacheFiles() {
   const footer = fs.readFileSync(`${__dirname}/mustache/components/footer.html`);
 
   const mustacheFiles = {
-    template: template.toString(),
+    recovery: recovery.toString(),
+    registration: registration.toString(),
     header: header.toString(),
     registrationBody: registrationBody.toString(),
     recoveryBody: recoveryBody.toString(),
@@ -39,7 +41,7 @@ function createMustacheFiles() {
 const mustacheFiles = createMustacheFiles();
 
 async function registrationMailer(params) {
-  const { template, header, registrationBody, footer } = mustacheFiles;
+  const { registration, header, registrationBody, footer } = mustacheFiles;
   const { email, name, surname } = params;
 
   await transporter.sendMail({
@@ -47,12 +49,16 @@ async function registrationMailer(params) {
     to: `${email}`,
     subject: 'Hello from EffectiveSoft Internship',
     text: `Hello ${name}`,
-    html: Mustache.render(template, { email, name, surname }, { header, registrationBody, footer }),
+    html: Mustache.render(
+      registration,
+      { email, name, surname },
+      { header, registrationBody, footer },
+    ),
   });
 }
 
 async function recoveryMailer(params, token) {
-  const { template, header, recoveryBody, footer } = mustacheFiles;
+  const { recovery, header, recoveryBody, footer } = mustacheFiles;
   const { email } = params;
 
   await transporter.sendMail({
@@ -60,7 +66,7 @@ async function recoveryMailer(params, token) {
     to: `${email}`,
     subject: 'Password recovery',
     text: 'Hello from EF-soft',
-    html: Mustache.render(template, { email, token }, { header, recoveryBody, footer }),
+    html: Mustache.render(recovery, { email, token }, { header, recoveryBody, footer }),
   });
 }
 

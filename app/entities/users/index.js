@@ -13,50 +13,54 @@ async function getUserById(id) {
 }
 
 async function deleteUser(body) {
-  const result = await User.query().findOne({ email: body.email });
+  const { email } = body;
+  const result = await User.query().findOne({ email });
   if (!result) {
     throw ErrorService.errorThrow(404);
   }
-  await User.query().delete().findOne({ email: body.email });
+  await User.query().delete().findOne({ email });
 }
 
 async function updateUser(body) {
-  const result = await User.query().findOne({ email: body.email });
+  const { email, name, surname } = body;
+  const result = await User.query().findOne({ email });
   if (!result) {
     throw ErrorService.errorThrow(404);
   }
-  const name = body.name || result.name;
-  const surname = body.surname || result.surname;
+  const updatedName = name || result.name;
+  const updatedSurname = surname || result.surname;
 
   await User.query()
     .update({
-      name,
-      surname,
+      name: updatedName,
+      surname: updatedSurname,
     })
-    .findOne({ email: body.email });
+    .findOne({ email });
 }
 
 async function updatePassword(body) {
-  const user = await User.query().findOne({ email: body.email });
+  const { email, oldPassword, newPassword } = body;
+  const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  const isMatch = await bcrypt.compare(body.password, user.password);
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) {
     throw ErrorService.errorThrow(400);
   }
   const salt = await bcrypt.genSalt(Number(process.env.SALT));
-  const password = await bcrypt.hash(body.newPassword, salt);
+  const password = await bcrypt.hash(newPassword, salt);
 
   await User.query()
     .update({
       password,
     })
-    .findOne({ email: body.email });
+    .findOne({ email });
 }
 
 async function recoverPassword(body) {
-  const user = await User.query().findOne({ email: body.email });
+  const { email } = body;
+  const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
@@ -68,22 +72,26 @@ async function recoverPassword(body) {
   await recoveryMailer(user, token);
   await User.query()
     .update({
-      token,
+      recoveryPasswordToken: token,
     })
-    .findOne({ email: body.email });
+    .findOne({ email });
 }
 
 async function addNewPassword(body, query) {
-  const user = await User.query().findOne({ token: query.token, email: query.email });
+  const { newPassword } = body;
+  const user = await User.query().findOne({
+    recoveryPasswordToken: query.token,
+    email: query.email,
+  });
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
   const salt = await bcrypt.genSalt(Number(process.env.SALT));
-  const password = await bcrypt.hash(body.newPassword, salt);
+  const password = await bcrypt.hash(newPassword, salt);
 
   await User.query()
     .update({
-      token: null,
+      recoveryPasswordToken: null,
       password,
     })
     .findOne({ email: query.email });

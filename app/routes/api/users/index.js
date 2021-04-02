@@ -1,28 +1,22 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
-const Auth = require('../../../entities/auth/index');
+const { validate } = require('../../validation');
 const {
-  validate,
   updateUserInfoSchema,
-  registerSchema,
   updatePasswordSchema,
   passwordRecoverySchema,
-  loginSchema,
   checkingMailSchema,
-} = require('./validation');
+} = require('./validationSchemes');
 
 const router = new Router({
   prefix: '/users',
 });
 
 router
-  .get('/:id', getProfile)
-  .post('/registration', validate(registerSchema), registration)
-  .post('/login', validate(loginSchema), login)
-  .post('/recovery', validate(checkingMailSchema), recovery)
+  .get('/:id', passport.authenticate('jwt', { session: false }), getProfile)
   .put(
-    '/updateUserInfo',
+    '/updateInfo',
     passport.authenticate('jwt', { session: false }),
     validate(updateUserInfoSchema),
     putProfile,
@@ -33,9 +27,9 @@ router
     validate(updatePasswordSchema),
     updatePassword,
   )
-  .put('/passwordRecovery/:email/:token', validate(passwordRecoverySchema), passwordRecovery)
+  .put('/resetPassword/:email/:token', validate(passwordRecoverySchema), passwordRecovery)
   .delete(
-    '/deleteUser',
+    '/user',
     passport.authenticate('jwt', { session: false }),
     validate(checkingMailSchema),
     deleteProfile,
@@ -62,24 +56,6 @@ async function updatePassword(ctx) {
 async function deleteProfile(ctx) {
   const params = ctx.request.body;
   ctx.body = await User.deleteUser(params);
-  ctx.status = 200;
-}
-
-async function registration(ctx) {
-  const params = ctx.request.body;
-  ctx.body = await Auth.registerUser(params);
-  ctx.status = 201;
-}
-
-async function login(ctx) {
-  const params = ctx.request.body;
-  ctx.body = await Auth.loginUser(params);
-  ctx.status = 200;
-}
-
-async function recovery(ctx) {
-  const params = ctx.request.body;
-  ctx.body = await User.recoverPassword(params);
   ctx.status = 200;
 }
 
