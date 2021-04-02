@@ -11,7 +11,8 @@ const router = new Router({
 router
   .post('/registration', validate(registerSchema), registration)
   .post('/login', validate(loginSchema), login)
-  .post('/recovery', validate(checkingMailSchema), recovery);
+  .post('/recovery', validate(checkingMailSchema), recovery)
+  .post('/activate', activate);
 
 async function registration(ctx) {
   const params = ctx.request.body;
@@ -28,6 +29,12 @@ async function login(ctx) {
 async function recovery(ctx) {
   const params = ctx.request.body;
   ctx.body = await User.recoverPassword(params);
+  ctx.status = 200;
+}
+
+async function activate(ctx) {
+  const { query } = ctx.request;
+  ctx.body = await Auth.activateUser(query);
   ctx.status = 200;
 }
 

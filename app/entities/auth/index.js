@@ -18,8 +18,16 @@ async function registerUser(body) {
     email,
     password: hash,
   });
-
-  await registrationMailer(body);
+  const payload = {
+    email,
+  };
+  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+  await User.query()
+    .update({
+      activationToken: token,
+    })
+    .findOne({ email });
+  await registrationMailer(body, token);
 }
 
 async function loginUser(body) {
@@ -27,6 +35,8 @@ async function loginUser(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
   const isMatch = await bcrypt.compare(password, user.password);
   if (isMatch) {
@@ -39,7 +49,24 @@ async function loginUser(body) {
   throw ErrorService.errorThrow(400);
 }
 
+async function activateUser(query) {
+  const { activationToken, email } = query;
+  const user = await User.query().findOne({
+    activationToken,
+    email,
+  });
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  await User.query()
+    .update({
+      activationToken: null,
+    })
+    .findOne({ email });
+}
+
 module.exports = {
   registerUser,
   loginUser,
+  activateUser,
 };

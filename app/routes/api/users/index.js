@@ -27,7 +27,7 @@ router
     validate(updatePasswordSchema),
     updatePassword,
   )
-  .put('/resetPassword/:email/:token', validate(passwordRecoverySchema), passwordRecovery)
+  .put('/resetPassword', validate(passwordRecoverySchema), passwordRecovery)
   .delete(
     '/user',
     passport.authenticate('jwt', { session: false }),
@@ -60,9 +60,9 @@ async function deleteProfile(ctx) {
 }
 
 async function passwordRecovery(ctx) {
-  const query = ctx.params;
+  const { query } = ctx.request;
   const params = ctx.request.body;
-  ctx.body = await User.addNewPassword(params, query);
+  ctx.body = await User.resetPassword(params, query);
   ctx.status = 200;
 }
 

@@ -40,18 +40,22 @@ function createMustacheFiles() {
 
 const mustacheFiles = createMustacheFiles();
 
-async function registrationMailer(params) {
+async function registrationMailer(params, token) {
   const { registration, header, registrationBody, footer } = mustacheFiles;
-  const { email, name, surname } = params;
+  const { email, name } = params;
 
   await transporter.sendMail({
     from: `"Effective Soft" <${process.env.MAIL}>`,
     to: `${email}`,
-    subject: 'Hello from EffectiveSoft Internship',
+    subject: 'Account activation',
     text: `Hello ${name}`,
     html: Mustache.render(
       registration,
-      { email, name, surname },
+      {
+        email,
+        name,
+        token,
+      },
       { header, registrationBody, footer },
     ),
   });

@@ -5,30 +5,36 @@ const { recoveryMailer } = require('../../services/email/index');
 const ErrorService = require('../../middleware/error/errorServices');
 
 async function getUserById(id) {
-  const result = await User.query().findById(id);
-  if (!result) {
+  const user = await User.query().findById(id);
+  if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
-  return result;
+  return user;
 }
 
 async function deleteUser(body) {
   const { email } = body;
-  const result = await User.query().findOne({ email });
-  if (!result) {
+  const user = await User.query().findOne({ email });
+  if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
   await User.query().delete().findOne({ email });
 }
 
 async function updateUser(body) {
   const { email, name, surname } = body;
-  const result = await User.query().findOne({ email });
-  if (!result) {
+  const user = await User.query().findOne({ email });
+  if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
-  const updatedName = name || result.name;
-  const updatedSurname = surname || result.surname;
+  const updatedName = name || user.name;
+  const updatedSurname = surname || user.surname;
 
   await User.query()
     .update({
@@ -43,6 +49,8 @@ async function updatePassword(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
   const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) {
@@ -63,6 +71,8 @@ async function recoverPassword(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
   const payload = {
     email: user.email,
@@ -77,14 +87,17 @@ async function recoverPassword(body) {
     .findOne({ email });
 }
 
-async function addNewPassword(body, query) {
+async function resetPassword(body, query) {
   const { newPassword } = body;
+  const { recoveryPasswordToken, email } = query;
   const user = await User.query().findOne({
-    recoveryPasswordToken: query.token,
-    email: query.email,
+    recoveryPasswordToken,
+    email,
   });
   if (!user) {
     throw ErrorService.errorThrow(404);
+  } else if (user.activationToken) {
+    throw ErrorService.errorThrow(403);
   }
   const salt = await bcrypt.genSalt(Number(process.env.SALT));
   const password = await bcrypt.hash(newPassword, salt);
@@ -94,7 +107,7 @@ async function addNewPassword(body, query) {
       recoveryPasswordToken: null,
       password,
     })
-    .findOne({ email: query.email });
+    .findOne({ email });
 }
 
 module.exports = {
@@ -103,5 +116,5 @@ module.exports = {
   updateUser,
   updatePassword,
   recoverPassword,
-  addNewPassword,
+  resetPassword,
 };

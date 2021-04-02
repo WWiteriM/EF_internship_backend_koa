@@ -7,6 +7,7 @@ exports.up = function (knex) {
     table.string('email').unique();
     table.string('password');
     table.string('recoveryPasswordToken');
+    table.string('activationToken');
     table.string('createdAt').notNullable();
     table.string('updatedAt');
   });
