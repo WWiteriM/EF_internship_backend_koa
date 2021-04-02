@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const fs = require('fs').promises;
+const fs = require('fs');
 const Mustache = require('mustache');
 const ErrorService = require('../../middleware/error/errorServices');
 
@@ -13,14 +13,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function createMustacheFiles() {
-  const template = await fs.readFile(`${__dirname}/mustache/templates/template.html`);
-  const header = await fs.readFile(`${__dirname}/mustache/components/header.html`);
-  const registrationBody = await fs.readFile(
+function createMustacheFiles() {
+  const template = fs.readFileSync(`${__dirname}/mustache/templates/template.html`);
+  const header = fs.readFileSync(`${__dirname}/mustache/components/header.html`);
+  const registrationBody = fs.readFileSync(
     `${__dirname}/mustache/components/registrationBody.html`,
   );
-  const recoveryBody = await fs.readFile(`${__dirname}/mustache/components/recoveryBody.html`);
-  const footer = await fs.readFile(`${__dirname}/mustache/components/footer.html`);
+  const recoveryBody = fs.readFileSync(`${__dirname}/mustache/components/recoveryBody.html`);
+  const footer = fs.readFileSync(`${__dirname}/mustache/components/footer.html`);
 
   const mustacheFiles = {
     template: template.toString(),
@@ -36,8 +36,10 @@ async function createMustacheFiles() {
   return mustacheFiles;
 }
 
+const mustacheFiles = createMustacheFiles();
+
 async function registrationMailer(params) {
-  const { template, header, registrationBody, footer } = await createMustacheFiles();
+  const { template, header, registrationBody, footer } = mustacheFiles;
   const { email, name, surname } = params;
 
   await transporter.sendMail({
@@ -50,7 +52,7 @@ async function registrationMailer(params) {
 }
 
 async function recoveryMailer(params, token) {
-  const { template, header, recoveryBody, footer } = await createMustacheFiles();
+  const { template, header, recoveryBody, footer } = mustacheFiles;
   const { email } = params;
 
   await transporter.sendMail({
