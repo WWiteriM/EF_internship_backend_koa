@@ -1,4 +1,5 @@
 const Error400 = require('./Error400');
+const Error401 = require('./Error401');
 const Error404 = require('./Error404');
 const Error403 = require('./Error403');
 const Error500 = require('./Error500');
@@ -19,6 +20,8 @@ function errorThrow(code) {
     throw new Error400(code, 'Validation Error, please enter valid data');
   } else if (code === 404) {
     throw new Error404(code, 'Your data was not found');
+  } else if (code === 401) {
+    throw new Error401(code, 'Authorisation Error');
   } else if (code === 403) {
     throw new Error403(code, 'Access denied, please activate your account');
   } else {

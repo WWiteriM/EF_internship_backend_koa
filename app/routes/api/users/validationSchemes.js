@@ -16,13 +16,8 @@ const checkingMailSchema = yup.object().shape({
   email: yup.string().email().required(),
 });
 
-const passwordRecoverySchema = yup.object().shape({
-  newPassword: yup.string().min(4).max(20).required(),
-});
-
 module.exports = {
   updateUserInfoSchema,
   updatePasswordSchema,
   checkingMailSchema,
-  passwordRecoverySchema,
 };

@@ -8,8 +8,6 @@ async function getUserById(id) {
   const user = await User.query().findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
-  } else if (user.activationToken) {
-    throw ErrorService.errorThrow(403);
   }
   return user;
 }
@@ -19,8 +17,6 @@ async function deleteUser(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
-  } else if (user.activationToken) {
-    throw ErrorService.errorThrow(403);
   }
   await User.query().delete().findOne({ email });
 }
@@ -30,8 +26,6 @@ async function updateUser(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
-  } else if (user.activationToken) {
-    throw ErrorService.errorThrow(403);
   }
   const updatedName = name || user.name;
   const updatedSurname = surname || user.surname;
@@ -49,8 +43,6 @@ async function updatePassword(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
-  } else if (user.activationToken) {
-    throw ErrorService.errorThrow(403);
   }
   const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) {
@@ -71,8 +63,6 @@ async function recoverPassword(body) {
   const user = await User.query().findOne({ email });
   if (!user) {
     throw ErrorService.errorThrow(404);
-  } else if (user.activationToken) {
-    throw ErrorService.errorThrow(403);
   }
   const payload = {
     email: user.email,
@@ -96,8 +86,6 @@ async function resetPassword(body, query) {
   });
   if (!user) {
     throw ErrorService.errorThrow(404);
-  } else if (user.activationToken) {
-    throw ErrorService.errorThrow(403);
   }
   const salt = await bcrypt.genSalt(Number(process.env.SALT));
   const password = await bcrypt.hash(newPassword, salt);

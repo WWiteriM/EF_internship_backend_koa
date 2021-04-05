@@ -1,5 +1,6 @@
-const Error404 = require('../middleware/error/Error404');
-const Error403 = require('../middleware/error/Error403');
+// const Error404 = require('../middleware/error/Error404');
+// const Error403 = require('../middleware/error/Error403');
+// const Error401 = require('../middleware/error/Error401');
 const ErrorService = require('../middleware/error/errorServices');
 
 function validate(schema) {
@@ -8,12 +9,7 @@ function validate(schema) {
       await schema.validate(ctx.request.body);
       await next();
     } catch (err) {
-      if (err instanceof Error404) {
-        throw ErrorService.errorThrow(404);
-      } else if (err instanceof Error403) {
-        throw ErrorService.errorThrow(403);
-      }
-      throw ErrorService.errorThrow(400);
+      throw ErrorService.errorThrow(err.code);
     }
   };
 }

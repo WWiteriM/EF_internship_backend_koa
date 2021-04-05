@@ -1,11 +1,11 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
+const jwtValidate = require('../../../middleware/jwt/jwtValidation');
 const { validate } = require('../../validation');
 const {
   updateUserInfoSchema,
   updatePasswordSchema,
-  passwordRecoverySchema,
   checkingMailSchema,
 } = require('./validationSchemes');
 
@@ -14,23 +14,25 @@ const router = new Router({
 });
 
 router
-  .get('/:id', passport.authenticate('jwt', { session: false }), getProfile)
+  .get('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, getProfile)
   .put(
-    '/updateInfo',
+    '/:id/info',
     passport.authenticate('jwt', { session: false }),
+    jwtValidate,
     validate(updateUserInfoSchema),
     putProfile,
   )
   .put(
-    '/updatePassword',
+    '/:id/password',
     passport.authenticate('jwt', { session: false }),
+    jwtValidate,
     validate(updatePasswordSchema),
     updatePassword,
   )
-  .put('/resetPassword', validate(passwordRecoverySchema), passwordRecovery)
   .delete(
-    '/user',
+    '/delete',
     passport.authenticate('jwt', { session: false }),
+    jwtValidate,
     validate(checkingMailSchema),
     deleteProfile,
   );
@@ -56,13 +58,6 @@ async function updatePassword(ctx) {
 async function deleteProfile(ctx) {
   const params = ctx.request.body;
   ctx.body = await User.deleteUser(params);
-  ctx.status = 200;
-}
-
-async function passwordRecovery(ctx) {
-  const { query } = ctx.request;
-  const params = ctx.request.body;
-  ctx.body = await User.resetPassword(params, query);
   ctx.status = 200;
 }
 

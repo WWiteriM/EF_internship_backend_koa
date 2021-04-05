@@ -16,8 +16,13 @@ const loginSchema = yup.object().shape({
   password: yup.string().min(4).max(20).required(),
 });
 
+const passwordRecoverySchema = yup.object().shape({
+  newPassword: yup.string().min(4).max(20).required(),
+});
+
 module.exports = {
   registerSchema,
   checkingMailSchema,
   loginSchema,
+  passwordRecoverySchema,
 };

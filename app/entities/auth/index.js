@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { addMinutes } = require('date-fns');
 const User = require('../../models/users');
 const ErrorService = require('../../middleware/error/errorServices');
 const { registrationMailer } = require('../../services/email/index');
@@ -21,7 +22,11 @@ async function registerUser(body) {
   const payload = {
     email,
   };
-  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+  const timeOfLife = addMinutes(
+    new Date().setDate(new Date().getDate()),
+    process.env.JWT_LIFE_TIME,
+  );
+  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: timeOfLife.getTime() });
   await User.query()
     .update({
       activationToken: token,
@@ -44,7 +49,11 @@ async function loginUser(body) {
       id: user.id,
       email: user.email,
     };
-    return jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+    const timeOfLife = addMinutes(
+      new Date().setDate(new Date().getDate()),
+      process.env.JWT_LIFE_TIME,
+    );
+    return jwt.sign(payload, process.env.SECRET, { expiresIn: timeOfLife.getTime() });
   }
   throw ErrorService.errorThrow(400);
 }
@@ -57,6 +66,11 @@ async function activateUser(query) {
   });
   if (!user) {
     throw ErrorService.errorThrow(404);
+  }
+  const currantTime = new Date().setDate(new Date().getDate());
+  const tokenLifeTime = await jwt.verify(activationToken, process.env.SECRET);
+  if (tokenLifeTime.exp < currantTime) {
+    throw ErrorService.errorThrow(403);
   }
   await User.query()
     .update({
