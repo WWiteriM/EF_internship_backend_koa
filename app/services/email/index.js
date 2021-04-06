@@ -42,7 +42,7 @@ const mustacheFiles = createMustacheFiles();
 
 async function registrationMailer(params, token) {
   const { registration, header, registrationBody, footer } = mustacheFiles;
-  const { email, name } = params;
+  const { email, name, id } = params;
 
   await transporter.sendMail({
     from: `"Effective Soft" <${process.env.MAIL}>`,
@@ -54,6 +54,7 @@ async function registrationMailer(params, token) {
       {
         email,
         name,
+        id,
         token,
       },
       { header, registrationBody, footer },
@@ -63,14 +64,23 @@ async function registrationMailer(params, token) {
 
 async function recoveryMailer(params, token) {
   const { recovery, header, recoveryBody, footer } = mustacheFiles;
-  const { email } = params;
+  const { email, name, id } = params;
 
   await transporter.sendMail({
     from: `"Effective Soft" <${process.env.MAIL}>`,
     to: `${email}`,
     subject: 'Password recovery',
     text: 'Hello from EF-soft',
-    html: Mustache.render(recovery, { email, token }, { header, recoveryBody, footer }),
+    html: Mustache.render(
+      recovery,
+      {
+        email,
+        name,
+        id,
+        token,
+      },
+      { header, recoveryBody, footer },
+    ),
   });
 }
 

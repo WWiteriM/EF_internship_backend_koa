@@ -1,11 +1,11 @@
 const Router = require('koa-router');
-const Auth = require('../../../entities/auth/index');
+const AuthEntity = require('../../../entities/auth/index');
 const { validate } = require('../../validation');
 const {
   registerSchema,
   loginSchema,
-  checkingMailSchema,
-  passwordRecoverySchema,
+  recoverUserPasswordSchema,
+  newPasswordSchema,
 } = require('./validationSchemes');
 
 const router = new Router({
@@ -15,38 +15,38 @@ const router = new Router({
 router
   .post('/registration', validate(registerSchema), registration)
   .post('/login', validate(loginSchema), login)
-  .post('/recovery', validate(checkingMailSchema), recovery)
   .post('/activate', activate)
-  .put('/resetPassword', validate(passwordRecoverySchema), passwordRecovery);
+  .post('/recovery', validate(recoverUserPasswordSchema), recovery)
+  .put('/new-password', validate(newPasswordSchema), newPassword);
 
 async function registration(ctx) {
   const params = ctx.request.body;
-  ctx.body = await Auth.registerUser(params);
+  ctx.body = await AuthEntity.registrationUser(params);
   ctx.status = 201;
 }
 
 async function login(ctx) {
   const params = ctx.request.body;
-  ctx.body = await Auth.loginUser(params);
-  ctx.status = 200;
-}
-
-async function recovery(ctx) {
-  const params = ctx.request.body;
-  ctx.body = await Auth.recoverPassword(params);
+  ctx.body = await AuthEntity.loginUser(params);
   ctx.status = 200;
 }
 
 async function activate(ctx) {
   const { query } = ctx.request;
-  ctx.body = await Auth.activateUser(query);
+  ctx.body = await AuthEntity.activateUser(query);
   ctx.status = 200;
 }
 
-async function passwordRecovery(ctx) {
+async function recovery(ctx) {
+  const params = ctx.request.body;
+  ctx.body = await AuthEntity.recoverUserPassword(params);
+  ctx.status = 200;
+}
+
+async function newPassword(ctx) {
   const { query } = ctx.request;
   const params = ctx.request.body;
-  ctx.body = await Auth.resetPassword(params, query);
+  ctx.body = await AuthEntity.enterNewUserPassword(params, query);
   ctx.status = 200;
 }
 

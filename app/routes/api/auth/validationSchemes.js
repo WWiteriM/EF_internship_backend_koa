@@ -7,22 +7,22 @@ const registerSchema = yup.object().shape({
   password: yup.string().min(4).max(20).required(),
 });
 
-const checkingMailSchema = yup.object().shape({
-  email: yup.string().email().required(),
-});
-
 const loginSchema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().min(4).max(20).required(),
 });
 
-const passwordRecoverySchema = yup.object().shape({
+const recoverUserPasswordSchema = yup.object().shape({
+  email: yup.string().email().required(),
+});
+
+const newPasswordSchema = yup.object().shape({
   newPassword: yup.string().min(4).max(20).required(),
 });
 
 module.exports = {
   registerSchema,
-  checkingMailSchema,
+  recoverUserPasswordSchema,
   loginSchema,
-  passwordRecoverySchema,
+  newPasswordSchema,
 };
