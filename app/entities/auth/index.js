@@ -114,7 +114,6 @@ async function enterNewUserPassword(body, query) {
   }
   const currantTime = new Date().setDate(new Date().getDate());
   const tokenLifeTime = await jwt.verify(recoveryPasswordToken, process.env.SECRET);
-  console.log(currantTime, tokenLifeTime.exp);
   if (tokenLifeTime.exp < currantTime) {
     throw ErrorService.errorThrow(403);
   }
