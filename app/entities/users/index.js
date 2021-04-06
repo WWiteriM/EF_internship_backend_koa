@@ -69,12 +69,12 @@ async function recoverPassword(body) {
     updatedAt: user.updatedAt,
   };
   const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
-  await recoveryMailer(user, token);
   await User.query()
     .update({
       recoveryPasswordToken: token,
     })
     .findOne({ email });
+  await recoveryMailer(user, token);
 }
 
 async function resetPassword(body, query) {

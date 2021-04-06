@@ -19,14 +19,16 @@ async function registerUser(body) {
     email,
     password: hash,
   });
-  const payload = {
-    email,
-  };
   const timeOfLife = addMinutes(
     new Date().setDate(new Date().getDate()),
     process.env.JWT_LIFE_TIME,
   );
-  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: timeOfLife.getTime() });
+  const payload = {
+    email,
+    iat: new Date().getTime(),
+    exp: timeOfLife.getTime(),
+  };
+  const token = await jwt.sign(payload, process.env.SECRET);
   await User.query()
     .update({
       activationToken: token,
@@ -45,15 +47,17 @@ async function loginUser(body) {
   }
   const isMatch = await bcrypt.compare(password, user.password);
   if (isMatch) {
-    const payload = {
-      id: user.id,
-      email: user.email,
-    };
     const timeOfLife = addMinutes(
       new Date().setDate(new Date().getDate()),
       process.env.JWT_LIFE_TIME,
     );
-    return jwt.sign(payload, process.env.SECRET, { expiresIn: timeOfLife.getTime() });
+    const payload = {
+      id: user.id,
+      email: user.email,
+      iat: new Date().getTime(),
+      exp: timeOfLife.getTime(),
+    };
+    return jwt.sign(payload, process.env.SECRET);
   }
   throw ErrorService.errorThrow(400);
 }

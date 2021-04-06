@@ -16,7 +16,7 @@ const router = new Router({
 router
   .get('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, getProfile)
   .put(
-    '/:id/info',
+    '/info',
     passport.authenticate('jwt', { session: false }),
     jwtValidate,
     validate(updateUserInfoSchema),
