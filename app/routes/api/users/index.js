@@ -3,24 +3,20 @@ const passport = require('koa-passport');
 const User = require('../../../entities/users/index');
 const jwtValidate = require('../../../middleware/jwt/jwtValidation');
 const { validate } = require('../../validation');
-const {
-  updateUserInfoSchema,
-  updatePasswordSchema,
-  checkingMailSchema,
-} = require('./validationSchemes');
+const { updateUserInfoSchema, updatePasswordSchema } = require('./validationSchemes');
 
 const router = new Router({
   prefix: '/users',
 });
 
 router
-  .get('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, getProfile)
+  .get('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, getUser)
   .put(
-    '/info',
+    '/:id',
     passport.authenticate('jwt', { session: false }),
     jwtValidate,
     validate(updateUserInfoSchema),
-    putProfile,
+    updateUser,
   )
   .put(
     '/:id/password',
@@ -29,35 +25,31 @@ router
     validate(updatePasswordSchema),
     updatePassword,
   )
-  .delete(
-    '/delete',
-    passport.authenticate('jwt', { session: false }),
-    jwtValidate,
-    validate(checkingMailSchema),
-    deleteProfile,
-  );
+  .delete('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, deleteUser);
 
-async function getProfile(ctx) {
+async function getUser(ctx) {
   const { id } = ctx.params;
-  ctx.body = await User.getUserById(id);
+  ctx.body = await User.getUser(id);
   ctx.status = 200;
 }
 
-async function putProfile(ctx) {
+async function updateUser(ctx) {
+  const { id } = ctx.params;
   const params = ctx.request.body;
-  ctx.body = await User.updateUser(params);
+  ctx.body = await User.updateUserInfo(id, params);
   ctx.status = 200;
 }
 
 async function updatePassword(ctx) {
+  const { id } = ctx.params;
   const params = ctx.request.body;
-  ctx.body = await User.updatePassword(params);
+  ctx.body = await User.updateUserPassword(id, params);
   ctx.status = 200;
 }
 
-async function deleteProfile(ctx) {
-  const params = ctx.request.body;
-  ctx.body = await User.deleteUser(params);
+async function deleteUser(ctx) {
+  const { id } = ctx.params;
+  ctx.body = await User.deleteUser(id);
   ctx.status = 200;
 }
 

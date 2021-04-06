@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { addMinutes } = require('date-fns');
 const User = require('../../models/users');
 const ErrorService = require('../../middleware/error/errorServices');
-const { registrationMailer } = require('../../services/email/index');
+const { registrationMailer, recoveryMailer } = require('../../services/email/index');
 
 async function registerUser(body) {
   const { email, password, name, surname } = body;
@@ -83,8 +83,50 @@ async function activateUser(query) {
     .findOne({ email });
 }
 
+async function recoverPassword(body) {
+  const { email } = body;
+  const user = await User.query().findOne({ email });
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  const payload = {
+    email: user.email,
+    updatedAt: user.updatedAt,
+  };
+  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+  await User.query()
+    .update({
+      recoveryPasswordToken: token,
+    })
+    .findOne({ email });
+  await recoveryMailer(user, token);
+}
+
+async function resetPassword(body, query) {
+  const { newPassword } = body;
+  const { recoveryPasswordToken, email } = query;
+  const user = await User.query().findOne({
+    recoveryPasswordToken,
+    email,
+  });
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+  const password = await bcrypt.hash(newPassword, salt);
+
+  await User.query()
+    .update({
+      recoveryPasswordToken: null,
+      password,
+    })
+    .findOne({ email });
+}
+
 module.exports = {
   registerUser,
   loginUser,
   activateUser,
+  recoverPassword,
+  resetPassword,
 };

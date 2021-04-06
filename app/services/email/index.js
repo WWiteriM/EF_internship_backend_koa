@@ -1,5 +1,5 @@
-const nodemailer = require('nodemailer');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 const Mustache = require('mustache');
 const ErrorService = require('../../middleware/error/errorServices');
 

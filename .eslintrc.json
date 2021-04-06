@@ -16,6 +16,7 @@
     "rules": {
         "no-use-before-define": ["error", {"functions": false, "classes": true}],
         "linebreak-style": 0,
-        "indent": ["error", 2, { "MemberExpression": 1 }]
+        "indent": ["error", 2, { "MemberExpression": 1 }],
+        "eslint object-curly-newline": 0
     }
 }

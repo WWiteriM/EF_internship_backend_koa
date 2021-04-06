@@ -1,5 +1,4 @@
 const Router = require('koa-router');
-const User = require('../../../entities/users/index');
 const Auth = require('../../../entities/auth/index');
 const { validate } = require('../../validation');
 const {
@@ -34,7 +33,7 @@ async function login(ctx) {
 
 async function recovery(ctx) {
   const params = ctx.request.body;
-  ctx.body = await User.recoverPassword(params);
+  ctx.body = await Auth.recoverPassword(params);
   ctx.status = 200;
 }
 
@@ -47,7 +46,7 @@ async function activate(ctx) {
 async function passwordRecovery(ctx) {
   const { query } = ctx.request;
   const params = ctx.request.body;
-  ctx.body = await User.resetPassword(params, query);
+  ctx.body = await Auth.resetPassword(params, query);
   ctx.status = 200;
 }
 

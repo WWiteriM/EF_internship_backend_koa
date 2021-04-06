@@ -1,10 +1,8 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../../models/users');
-const { recoveryMailer } = require('../../services/email/index');
 const ErrorService = require('../../middleware/error/errorServices');
 
-async function getUserById(id) {
+async function getUser(id) {
   const user = await User.query().findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
@@ -12,35 +10,36 @@ async function getUserById(id) {
   return user;
 }
 
-async function deleteUser(body) {
-  const { email } = body;
-  const user = await User.query().findOne({ email });
+async function deleteUser(id) {
+  const user = await User.query().findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  await User.query().delete().findOne({ email });
+  await User.query().delete().findById(id);
 }
 
-async function updateUser(body) {
+async function updateUserInfo(id, body) {
   const { email, name, surname } = body;
-  const user = await User.query().findOne({ email });
+  const user = await User.query().findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
   const updatedName = name || user.name;
   const updatedSurname = surname || user.surname;
+  const updatedEmail = email || user.email;
 
   await User.query()
     .update({
       name: updatedName,
       surname: updatedSurname,
+      email: updatedEmail,
     })
-    .findOne({ email });
+    .findById(id);
 }
 
-async function updatePassword(body) {
-  const { email, oldPassword, newPassword } = body;
-  const user = await User.query().findOne({ email });
+async function updateUserPassword(id, body) {
+  const { oldPassword, newPassword } = body;
+  const user = await User.query().findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
@@ -55,54 +54,12 @@ async function updatePassword(body) {
     .update({
       password,
     })
-    .findOne({ email });
-}
-
-async function recoverPassword(body) {
-  const { email } = body;
-  const user = await User.query().findOne({ email });
-  if (!user) {
-    throw ErrorService.errorThrow(404);
-  }
-  const payload = {
-    email: user.email,
-    updatedAt: user.updatedAt,
-  };
-  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
-  await User.query()
-    .update({
-      recoveryPasswordToken: token,
-    })
-    .findOne({ email });
-  await recoveryMailer(user, token);
-}
-
-async function resetPassword(body, query) {
-  const { newPassword } = body;
-  const { recoveryPasswordToken, email } = query;
-  const user = await User.query().findOne({
-    recoveryPasswordToken,
-    email,
-  });
-  if (!user) {
-    throw ErrorService.errorThrow(404);
-  }
-  const salt = await bcrypt.genSalt(Number(process.env.SALT));
-  const password = await bcrypt.hash(newPassword, salt);
-
-  await User.query()
-    .update({
-      recoveryPasswordToken: null,
-      password,
-    })
-    .findOne({ email });
+    .findById(id);
 }
 
 module.exports = {
-  getUserById,
+  getUser,
   deleteUser,
-  updateUser,
-  updatePassword,
-  recoverPassword,
-  resetPassword,
+  updateUserInfo,
+  updateUserPassword,
 };
