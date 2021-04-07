@@ -11,30 +11,19 @@ async function getUser(id) {
 }
 
 async function deleteUser(id) {
-  const user = await User.query().findById(id);
+  const user = await User.query().deleteById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  await User.query().delete().findById(id);
 }
 
 async function updateUserInfo(id, body) {
-  const { email, name, surname } = body;
-  const user = await User.query().findById(id);
+  const user = await User.query()
+    .update({ ...body })
+    .findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  const updatedName = name || user.name;
-  const updatedSurname = surname || user.surname;
-  const updatedEmail = email || user.email;
-
-  await User.query()
-    .update({
-      name: updatedName,
-      surname: updatedSurname,
-      email: updatedEmail,
-    })
-    .findById(id);
 }
 
 async function updateUserPassword(id, body) {
