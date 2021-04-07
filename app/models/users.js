@@ -26,11 +26,19 @@ class Users extends BaseModel {
   }
 
   static get visible() {
-    return ['id', 'name', 'surname', 'email'];
+    return ['name', 'surname', 'email'];
   }
 
   static get hidden() {
-    return ['password', 'token', 'createdAt', 'updatedAt'];
+    return [
+      'id',
+      'password',
+      'token',
+      'recoveryPasswordToken',
+      'activationToken',
+      'createdAt',
+      'updatedAt',
+    ];
   }
 
   static get jsonSchema() {
