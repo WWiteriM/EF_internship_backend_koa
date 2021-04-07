@@ -18,9 +18,7 @@ async function deleteUser(id) {
 }
 
 async function updateUserInfo(id, body) {
-  const user = await User.query()
-    .update({ ...body })
-    .findById(id);
+  const user = await User.query().update(body).findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }

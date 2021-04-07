@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { addMinutes } = require('date-fns');
 const User = require('../../models/users');
 const ErrorService = require('../../middleware/error/errorServices');
+const { jwtValidate } = require('./jwtValidation');
 const { registrationMailer, recoveryMailer } = require('../../services/email/index');
 
 async function registrationUser(body) {
@@ -19,16 +19,10 @@ async function registrationUser(body) {
     email,
     password: hash,
   });
-  const timeOfLife = addMinutes(
-    new Date().setDate(new Date().getDate()),
-    process.env.JWT_LIFE_TIME,
-  );
   const payload = {
     email,
-    iat: new Date().getTime(),
-    exp: timeOfLife.getTime(),
   };
-  const token = await jwt.sign(payload, process.env.SECRET);
+  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: '15m' });
   await User.query()
     .update({
       activationToken: token,
@@ -46,18 +40,13 @@ async function loginUser(body) {
     throw ErrorService.errorThrow(403);
   }
   const isMatch = await bcrypt.compare(password, user.password);
+
   if (isMatch) {
-    const timeOfLife = addMinutes(
-      new Date().setDate(new Date().getDate()),
-      process.env.JWT_LIFE_TIME,
-    );
     const payload = {
       id: user.id,
       email: user.email,
-      iat: new Date().getTime(),
-      exp: timeOfLife.getTime(),
     };
-    return jwt.sign(payload, process.env.SECRET);
+    return jwt.sign(payload, process.env.SECRET, { expiresIn: '15m' });
   }
   throw ErrorService.errorThrow(400);
 }
@@ -68,11 +57,7 @@ async function activateUser(query) {
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  const currantTime = new Date().setDate(new Date().getDate());
-  const tokenLifeTime = await jwt.verify(activationToken, process.env.SECRET);
-  if (tokenLifeTime.exp < currantTime) {
-    throw ErrorService.errorThrow(403);
-  }
+  await jwtValidate(activationToken);
   await User.query()
     .update({
       activationToken: null,
@@ -86,17 +71,11 @@ async function recoverUserPassword(body) {
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  const timeOfLife = addMinutes(
-    new Date().setDate(new Date().getDate()),
-    process.env.JWT_LIFE_TIME,
-  );
   const payload = {
     id: user.id,
     updatedAt: user.updatedAt,
-    iat: new Date().getTime(),
-    exp: timeOfLife.getTime(),
   };
-  const token = await jwt.sign(payload, process.env.SECRET);
+  const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: '15m' });
   await User.query()
     .update({
       recoveryPasswordToken: token,
@@ -112,11 +91,7 @@ async function enterNewUserPassword(body, query) {
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  const currantTime = new Date().setDate(new Date().getDate());
-  const tokenLifeTime = await jwt.verify(recoveryPasswordToken, process.env.SECRET);
-  if (tokenLifeTime.exp < currantTime) {
-    throw ErrorService.errorThrow(403);
-  }
+  await jwtValidate(recoveryPasswordToken);
   const salt = await bcrypt.genSalt(Number(process.env.SALT));
   const password = await bcrypt.hash(newPassword, salt);
   await User.query()

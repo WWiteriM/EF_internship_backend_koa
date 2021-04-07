@@ -1,7 +1,6 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
 const UserEntity = require('../../../entities/users/index');
-const jwtValidate = require('../../../middleware/jwt/jwtValidation');
 const { validate } = require('../../validation');
 const { updateUserInfoSchema, updatePasswordSchema } = require('./validationSchemes');
 
@@ -10,22 +9,20 @@ const router = new Router({
 });
 
 router
-  .get('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, getUser)
+  .get('/:id', passport.authenticate('jwt', { session: false }), getUser)
   .put(
     '/:id',
     passport.authenticate('jwt', { session: false }),
-    jwtValidate,
     validate(updateUserInfoSchema),
     updateUser,
   )
   .put(
     '/:id/password',
     passport.authenticate('jwt', { session: false }),
-    jwtValidate,
     validate(updatePasswordSchema),
     updatePassword,
   )
-  .delete('/:id', passport.authenticate('jwt', { session: false }), jwtValidate, deleteUser);
+  .delete('/:id', passport.authenticate('jwt', { session: false }), deleteUser);
 
 async function getUser(ctx) {
   const { id } = ctx.params;
