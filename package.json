@@ -28,12 +28,12 @@
     "koa-passport": "^4.1.4",
     "koa-router": "^10.0.0",
     "mustache": "^4.2.0",
-    "mysql": "^2.18.1",
     "nodemailer": "^6.5.0",
     "objection": "^2.2.14",
     "objection-timestamps": "^4.0.0",
     "objection-visibility": "^1.1.0",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.5.1",
     "yup": "^0.32.9"
   },
   "devDependencies": {

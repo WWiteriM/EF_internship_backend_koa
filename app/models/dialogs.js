@@ -5,18 +5,29 @@ class Dialogs extends BaseModel {
     return 'dialogs';
   }
 
+  static get idColumn() {
+    return 'id';
+  }
+
+  static get nameColumn() {
+    return 'name';
+  }
+
   static get visible() {
-    return [];
+    return ['name'];
   }
 
   static get hidden() {
-    return ['createdAt', 'updatedAt'];
+    return ['id', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      properties: {},
+      properties: {
+        id: { type: 'integer' },
+        name: { type: 'string' },
+      },
     };
   }
 }
