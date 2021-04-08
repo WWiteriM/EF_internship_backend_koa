@@ -1,13 +1,9 @@
 // eslint-disable-next-line func-names
 exports.up = function (knex) {
-  return knex.schema.createTable('users', (table) => {
+  return knex.schema.createTable('albums', (table) => {
     table.increments().primary();
     table.string('name');
-    table.string('surname');
-    table.string('email').unique();
-    table.string('password');
-    table.string('recoveryPasswordToken');
-    table.string('activationToken');
+    table.integer('user_id').unsigned().references('users.id');
     table.string('createdAt').notNullable();
     table.string('updatedAt');
   });
@@ -15,5 +11,5 @@ exports.up = function (knex) {
 
 // eslint-disable-next-line func-names
 exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('users');
+  return knex.schema.dropTableIfExists('albums');
 };
