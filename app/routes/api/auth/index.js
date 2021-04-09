@@ -21,7 +21,7 @@ router
 
 async function registration(ctx) {
   const params = ctx.request.body;
-  ctx.body = await AuthEntity.registrationUser(params);
+  await AuthEntity.registrationUser(params);
   ctx.status = 201;
 }
 
@@ -33,20 +33,20 @@ async function login(ctx) {
 
 async function activate(ctx) {
   const { query } = ctx.request;
-  ctx.body = await AuthEntity.activateUser(query);
+  await AuthEntity.activateUser(query);
   ctx.status = 200;
 }
 
 async function recovery(ctx) {
   const params = ctx.request.body;
-  ctx.body = await AuthEntity.recoverUserPassword(params);
+  await AuthEntity.recoverUserPassword(params);
   ctx.status = 200;
 }
 
 async function newPassword(ctx) {
   const { query } = ctx.request;
   const params = ctx.request.body;
-  ctx.body = await AuthEntity.enterNewUserPassword(params, query);
+  await AuthEntity.enterNewUserPassword(params, query);
   ctx.status = 200;
 }
 

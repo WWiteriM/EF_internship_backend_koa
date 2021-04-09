@@ -33,20 +33,20 @@ async function getUser(ctx) {
 async function updateUser(ctx) {
   const { id } = ctx.params;
   const params = ctx.request.body;
-  ctx.body = await UserEntity.updateUserInfo(id, params);
+  await UserEntity.updateUserInfo(id, params);
   ctx.status = 200;
 }
 
 async function updatePassword(ctx) {
   const { id } = ctx.params;
   const params = ctx.request.body;
-  ctx.body = await UserEntity.updateUserPassword(id, params);
+  await UserEntity.updateUserPassword(id, params);
   ctx.status = 200;
 }
 
 async function deleteUser(ctx) {
   const { id } = ctx.params;
-  ctx.body = await UserEntity.deleteUser(id);
+  await UserEntity.deleteUser(id);
   ctx.status = 200;
 }
 
