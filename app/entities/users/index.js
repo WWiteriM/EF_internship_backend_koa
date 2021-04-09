@@ -1,53 +1,52 @@
+const bcrypt = require('bcryptjs');
 const User = require('../../models/users');
 const ErrorService = require('../../middleware/error/errorServices');
 
-async function getUserById(id) {
-  const result = await User.query().findById(id);
-  if (!result) {
+async function getUser(id) {
+  const user = await User.query().findById(id);
+  if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  return result;
+  return user;
 }
 
-async function deleteUserById(id) {
-  const result = await User.query().findById(id);
-  if (!result) {
+async function deleteUser(id) {
+  const user = await User.query().deleteById(id);
+  if (!user) {
     throw ErrorService.errorThrow(404);
   }
-  await User.query().delete().findById(id);
 }
 
-async function addUser(params) {
-  const result = await User.query().findById(params.id);
-  if (result) {
+async function updateUserInfo(id, body) {
+  const user = await User.query().update(body).findById(id);
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+}
+
+async function updateUserPassword(id, body) {
+  const { oldPassword, newPassword } = body;
+  const user = await User.query().findById(id);
+  if (!user) {
+    throw ErrorService.errorThrow(404);
+  }
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
     throw ErrorService.errorThrow(400);
   }
-  await User.query().insert(params);
-}
-
-async function updateUserById(id, body) {
-  const result = await User.query().findById(id);
-  if (!result) {
-    throw ErrorService.errorThrow(404);
-  }
-  const name = body.name || result.name;
-  const surname = body.surname || result.surname;
-  const email = body.email || result.email;
-  const password = body.password || result.password;
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+  const password = await bcrypt.hash(newPassword, salt);
 
   await User.query()
     .update({
-      name,
-      surname,
-      email,
       password,
     })
     .findById(id);
 }
 
 module.exports = {
-  getUserById,
-  deleteUserById,
-  addUser,
-  updateUserById,
+  getUser,
+  deleteUser,
+  updateUserInfo,
+  updateUserPassword,
 };

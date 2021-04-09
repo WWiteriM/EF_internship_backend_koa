@@ -1,38 +1,52 @@
 const Router = require('koa-router');
-const User = require('../../../entities/users/index');
-const { validate, updateSchema, registerSchema } = require('./validation');
+const passport = require('koa-passport');
+const UserEntity = require('../../../entities/users/index');
+const { validate } = require('../../validation');
+const { updateUserInfoSchema, updatePasswordSchema } = require('./validationSchemes');
 
 const router = new Router({
   prefix: '/users',
 });
 
 router
-  .get('/:id', getProfile)
-  .post('/', validate(registerSchema), postProfile)
-  .put('/:id', validate(updateSchema), putProfile)
-  .delete('/:id', deleteProfile);
+  .get('/:id', passport.authenticate('jwt', { session: false }), getUser)
+  .put(
+    '/:id',
+    passport.authenticate('jwt', { session: false }),
+    validate(updateUserInfoSchema),
+    updateUser,
+  )
+  .put(
+    '/:id/password',
+    passport.authenticate('jwt', { session: false }),
+    validate(updatePasswordSchema),
+    updatePassword,
+  )
+  .delete('/:id', passport.authenticate('jwt', { session: false }), deleteUser);
 
-async function getProfile(ctx) {
+async function getUser(ctx) {
   const { id } = ctx.params;
-  ctx.body = await User.getUserById(id);
+  ctx.body = await UserEntity.getUser(id);
   ctx.status = 200;
 }
 
-async function postProfile(ctx) {
-  const params = ctx.request.body;
-  ctx.body = await User.addUser(params);
-  ctx.status = 200;
-}
-
-async function putProfile(ctx) {
+async function updateUser(ctx) {
   const { id } = ctx.params;
   const params = ctx.request.body;
-  ctx.body = await User.updateUserById(id, params);
+  await UserEntity.updateUserInfo(id, params);
   ctx.status = 200;
 }
 
-async function deleteProfile(ctx) {
-  ctx.body = await User.deleteUserById(ctx.params.id);
+async function updatePassword(ctx) {
+  const { id } = ctx.params;
+  const params = ctx.request.body;
+  await UserEntity.updateUserPassword(id, params);
+  ctx.status = 200;
+}
+
+async function deleteUser(ctx) {
+  const { id } = ctx.params;
+  await UserEntity.deleteUser(id);
   ctx.status = 200;
 }
 
