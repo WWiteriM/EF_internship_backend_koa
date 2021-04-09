@@ -29,6 +29,7 @@ async function registrationUser(body) {
     })
     .findById(newUser.id);
   await registrationMailer(newUser, token);
+  return newUser;
 }
 
 async function loginUser(body) {
@@ -63,6 +64,7 @@ async function activateUser(query) {
       activationToken: null,
     })
     .findById(id);
+  return id;
 }
 
 async function recoverUserPassword(body) {
@@ -82,6 +84,7 @@ async function recoverUserPassword(body) {
     })
     .findById(user.id);
   await recoveryMailer(user, token);
+  return user.id;
 }
 
 async function enterNewUserPassword(body, query) {
@@ -100,6 +103,7 @@ async function enterNewUserPassword(body, query) {
       password,
     })
     .findById(id);
+  return id;
 }
 
 module.exports = {

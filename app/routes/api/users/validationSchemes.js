@@ -1,17 +1,22 @@
 const yup = require('yup');
 
-const updateUserInfoSchema = yup.object().shape({
+const updateUserInfoBodySchema = yup.object().shape({
   name: yup.string().trim(),
   surname: yup.string().trim(),
   email: yup.string().email(),
 });
 
-const updatePasswordSchema = yup.object().shape({
+const updatePasswordBodySchema = yup.object().shape({
   oldPassword: yup.string().min(4).max(20).required(),
   newPassword: yup.string().min(4).max(20).required(),
 });
 
+const idQuerySchema = yup.object().shape({
+  id: yup.number().required(),
+});
+
 module.exports = {
-  updateUserInfoSchema,
-  updatePasswordSchema,
+  updateUserInfoBodySchema,
+  updatePasswordBodySchema,
+  idQuerySchema,
 };

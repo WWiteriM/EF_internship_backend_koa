@@ -15,6 +15,7 @@ async function deleteUser(id) {
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
+  return id;
 }
 
 async function updateUserInfo(id, body) {
@@ -22,6 +23,7 @@ async function updateUserInfo(id, body) {
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
+  return id;
 }
 
 async function updateUserPassword(id, body) {
@@ -42,6 +44,7 @@ async function updateUserPassword(id, body) {
       password,
     })
     .findById(id);
+  return id;
 }
 
 module.exports = {

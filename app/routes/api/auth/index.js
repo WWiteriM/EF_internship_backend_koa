@@ -1,11 +1,13 @@
 const Router = require('koa-router');
 const AuthEntity = require('../../../entities/auth/index');
-const { validate } = require('../../validation');
+const { bodyValidate, paramsValidate } = require('../../validation');
 const {
-  registerSchema,
-  loginSchema,
-  recoverUserPasswordSchema,
-  newPasswordSchema,
+  registerBodySchema,
+  loginBodySchema,
+  recoverUserPasswordBodySchema,
+  newPasswordBodySchema,
+  newPasswordParamsSchema,
+  activateParamsSchema,
 } = require('./validationSchemes');
 
 const router = new Router({
@@ -13,15 +15,20 @@ const router = new Router({
 });
 
 router
-  .post('/registration', validate(registerSchema), registration)
-  .post('/login', validate(loginSchema), login)
-  .post('/activate', activate)
-  .post('/recovery', validate(recoverUserPasswordSchema), recovery)
-  .put('/new-password', validate(newPasswordSchema), newPassword);
+  .post('/registration', bodyValidate(registerBodySchema), registration)
+  .post('/login', bodyValidate(loginBodySchema), login)
+  .post('/activate', paramsValidate(activateParamsSchema), activate)
+  .post('/recovery', bodyValidate(recoverUserPasswordBodySchema), recovery)
+  .put(
+    '/new-password',
+    bodyValidate(newPasswordBodySchema),
+    paramsValidate(newPasswordParamsSchema),
+    newPassword,
+  );
 
 async function registration(ctx) {
   const params = ctx.request.body;
-  await AuthEntity.registrationUser(params);
+  ctx.body = await AuthEntity.registrationUser(params);
   ctx.status = 201;
 }
 
@@ -33,20 +40,20 @@ async function login(ctx) {
 
 async function activate(ctx) {
   const { query } = ctx.request;
-  await AuthEntity.activateUser(query);
+  ctx.body = await AuthEntity.activateUser(query);
   ctx.status = 200;
 }
 
 async function recovery(ctx) {
   const params = ctx.request.body;
-  await AuthEntity.recoverUserPassword(params);
+  ctx.body = await AuthEntity.recoverUserPassword(params);
   ctx.status = 200;
 }
 
 async function newPassword(ctx) {
   const { query } = ctx.request;
   const params = ctx.request.body;
-  await AuthEntity.enterNewUserPassword(params, query);
+  ctx.body = await AuthEntity.enterNewUserPassword(params, query);
   ctx.status = 200;
 }
 
