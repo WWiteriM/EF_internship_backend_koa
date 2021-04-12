@@ -15,7 +15,7 @@ class Albums extends BaseModel {
   }
 
   static get userIdColumn() {
-    return 'user_id';
+    return 'userId';
   }
 
   static get visible() {
@@ -23,7 +23,7 @@ class Albums extends BaseModel {
   }
 
   static get hidden() {
-    return ['id', 'user_id', 'createdAt', 'updatedAt'];
+    return ['id', 'userId', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {
@@ -32,18 +32,18 @@ class Albums extends BaseModel {
       properties: {
         id: { type: 'integer' },
         name: { type: 'string' },
-        user_id: { type: 'integer' },
+        userId: { type: 'integer' },
       },
     };
   }
 
   static get relationMappings() {
     return {
-      user_id: {
-        relation: BaseModel.HasManyRelation,
+      info: {
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'albums.user_id',
+          from: 'albums.userId',
           to: 'users.id',
         },
       },

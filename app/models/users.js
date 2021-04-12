@@ -53,6 +53,21 @@ class Users extends BaseModel {
       },
     };
   }
+
+  // static get relationMappings() {
+  //   // eslint-disable-next-line global-require
+  //   const Album = require('./albums');
+  //   return {
+  //     owner: {
+  //       relation: BaseModel.HasManyRelation,
+  //       modelClass: Album,
+  //       join: {
+  //         from: 'users.id',
+  //         to: 'albums.userId',
+  //       },
+  //     },
+  //   };
+  // }
 }
 
 module.exports = Users;
