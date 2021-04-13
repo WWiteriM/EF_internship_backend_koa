@@ -22,10 +22,6 @@ class News extends BaseModel {
     return 'user_id';
   }
 
-  static get visible() {
-    return ['title', 'text'];
-  }
-
   static get hidden() {
     return ['id', 'user_id', 'createdAt', 'updatedAt'];
   }

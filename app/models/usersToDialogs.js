@@ -19,10 +19,6 @@ class UserToDialogs extends BaseModel {
     return 'dialog_id';
   }
 
-  static get visible() {
-    return ['user_id', 'dialog_id'];
-  }
-
   static get hidden() {
     return ['id', 'createdAt', 'updatedAt'];
   }

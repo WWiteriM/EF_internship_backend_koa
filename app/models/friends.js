@@ -10,12 +10,12 @@ class Friends extends BaseModel {
     return 'id';
   }
 
-  static get userIdColumn() {
-    return 'user_id';
+  static get userColumn() {
+    return 'userId';
   }
 
-  static get visible() {
-    return ['user_id'];
+  static get userIdColumn() {
+    return 'friendId';
   }
 
   static get hidden() {
@@ -36,12 +36,12 @@ class Friends extends BaseModel {
 
   static get relationMappings() {
     return {
-      user_id: {
-        relation: BaseModel.BelongsToOneRelation,
+      friends_info: {
+        relation: BaseModel.HasManyRelation,
         modelClass: User,
         join: {
-          from: 'albums.user_id',
-          to: 'users.id',
+          from: 'users.id',
+          to: 'friends.friendId',
         },
       },
     };

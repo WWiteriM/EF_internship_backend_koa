@@ -18,10 +18,6 @@ class Albums extends BaseModel {
     return 'userId';
   }
 
-  static get visible() {
-    return ['name'];
-  }
-
   static get hidden() {
     return ['id', 'userId', 'createdAt', 'updatedAt'];
   }
@@ -39,7 +35,7 @@ class Albums extends BaseModel {
 
   static get relationMappings() {
     return {
-      info: {
+      album_info: {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: User,
         join: {

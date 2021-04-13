@@ -1,65 +1,65 @@
 const Router = require('koa-router');
+const passport = require('koa-passport');
+const FriendEntity = require('../../../entities/friends/index');
+const UserEntity = require('../../../entities/users/index');
+const { bodyValidate, queryValidate } = require('../../validation');
+const {
+  getFriendByIdQuerySchema,
+  addFriendBodySchema,
+  deleteFriendQuerySchema,
+} = require('./validationSchemes');
 
 const router = new Router({
   prefix: '/friends',
 });
 
 router
-  .get('/:id', getFriend)
-  .get('/', getListOfFriends)
-  .post('/', postFriend)
-  .put('/', putFriend)
-  .delete('/', deleteFriend);
+  .get(
+    '/:id',
+    passport.authenticate('jwt', { session: false }),
+    queryValidate(getFriendByIdQuerySchema),
+    getFriendById,
+  )
+  .get('/', passport.authenticate('jwt', { session: false }), getFriends)
+  .post(
+    '/',
+    passport.authenticate('jwt', { session: false }),
+    bodyValidate(addFriendBodySchema),
+    addFriend,
+  )
+  .delete(
+    '/:id',
+    passport.authenticate('jwt', { session: false }),
+    queryValidate(deleteFriendQuerySchema),
+    deleteFriend,
+  );
 
-function getFriend(ctx) {
-  try {
-    const { params } = ctx;
-    ctx.body = `GET specific friends method with params = ${JSON.stringify(params)}`;
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+async function getFriendById(ctx) {
+  const { id } = ctx.params;
+  const userId = ctx.state.user.id;
+  ctx.body = await FriendEntity.getFriendById(id, userId);
+  ctx.status = 200;
 }
 
-function getListOfFriends(ctx) {
-  try {
-    ctx.body = 'GET all friends method';
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+async function getFriends(ctx) {
+  const { id } = ctx.state.user;
+  ctx.body = await FriendEntity.getAllFriends(id);
+  ctx.status = 200;
 }
 
-function postFriend(ctx) {
-  try {
-    ctx.body = 'POST friends method';
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+async function addFriend(ctx) {
+  const { friendId } = ctx.request.body;
+  const { id } = ctx.state.user;
+  await UserEntity.getUser(friendId);
+  ctx.body = await FriendEntity.addNewFriend(id, friendId);
+  ctx.status = 201;
 }
 
-function putFriend(ctx) {
-  try {
-    ctx.body = 'PUT friends method';
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
-}
-
-function deleteFriend(ctx) {
-  try {
-    ctx.body = 'DELETE friends method';
-    ctx.status = 200;
-  } catch (err) {
-    ctx.status = 500;
-    ctx.body = err.message;
-  }
+async function deleteFriend(ctx) {
+  const { id } = ctx.params;
+  const userId = ctx.state.user.id;
+  ctx.body = await FriendEntity.deleteFriendById(id, userId);
+  ctx.status = 200;
 }
 
 module.exports = router;

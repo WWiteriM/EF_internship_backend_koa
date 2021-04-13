@@ -2,7 +2,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('friends', (table) => {
     table.increments().primary();
-    table.integer('user_id').unsigned().references('users.id');
+    table.integer('userId').unsigned().references('users.id').onDelete('CASCADE');
+    table.integer('friendId').unsigned().references('users.id').onDelete('CASCADE');
     table.string('createdAt').notNullable();
     table.string('updatedAt');
   });

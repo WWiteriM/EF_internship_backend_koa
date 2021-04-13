@@ -13,10 +13,6 @@ class Dialogs extends BaseModel {
     return 'name';
   }
 
-  static get visible() {
-    return ['name'];
-  }
-
   static get hidden() {
     return ['id', 'createdAt', 'updatedAt'];
   }

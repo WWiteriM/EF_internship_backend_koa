@@ -18,10 +18,6 @@ class Messages extends BaseModel {
     return 'text';
   }
 
-  static get visible() {
-    return ['text'];
-  }
-
   static get hidden() {
     return ['id', 'dialog_id', 'createdAt', 'updatedAt'];
   }

@@ -26,10 +26,6 @@ class Photos extends BaseModel {
     return 'album_id';
   }
 
-  static get visible() {
-    return ['description', 'tag'];
-  }
-
   static get hidden() {
     return ['id', 'path', 'album_id', 'createdAt', 'updatedAt'];
   }
