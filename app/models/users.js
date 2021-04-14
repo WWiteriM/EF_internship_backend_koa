@@ -27,7 +27,6 @@ class Users extends BaseModel {
 
   static get hidden() {
     return [
-      'id',
       'password',
       'token',
       'recoveryPasswordToken',

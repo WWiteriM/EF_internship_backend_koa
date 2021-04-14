@@ -27,7 +27,7 @@ class Photos extends BaseModel {
   }
 
   static get hidden() {
-    return ['id', 'path', 'album_id', 'createdAt', 'updatedAt'];
+    return ['path', 'album_id', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {

@@ -19,7 +19,7 @@ class Albums extends BaseModel {
   }
 
   static get hidden() {
-    return ['id', 'userId', 'createdAt', 'updatedAt'];
+    return ['userId', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {

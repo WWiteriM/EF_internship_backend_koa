@@ -23,7 +23,7 @@ class News extends BaseModel {
   }
 
   static get hidden() {
-    return ['id', 'user_id', 'createdAt', 'updatedAt'];
+    return ['user_id', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {

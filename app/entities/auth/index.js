@@ -64,7 +64,7 @@ async function activateUser(query) {
       activationToken: null,
     })
     .findById(id);
-  return id;
+  return user.id;
 }
 
 async function recoverUserPassword(body) {
@@ -103,7 +103,7 @@ async function enterNewUserPassword(body, query) {
       password,
     })
     .findById(id);
-  return id;
+  return user.id;
 }
 
 module.exports = {

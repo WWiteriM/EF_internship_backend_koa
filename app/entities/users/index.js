@@ -44,7 +44,7 @@ async function updateUserPassword(id, body) {
       password,
     })
     .findById(id);
-  return id;
+  return user.id;
 }
 
 module.exports = {

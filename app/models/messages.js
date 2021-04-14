@@ -19,7 +19,7 @@ class Messages extends BaseModel {
   }
 
   static get hidden() {
-    return ['id', 'dialog_id', 'createdAt', 'updatedAt'];
+    return ['dialog_id', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {

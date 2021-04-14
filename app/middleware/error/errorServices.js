@@ -9,7 +9,6 @@ function errorHandler() {
     try {
       await next();
     } catch (err) {
-      // console.log(err);
       ctx.status = err.code;
       ctx.body = err.message;
     }

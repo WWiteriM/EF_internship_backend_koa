@@ -27,11 +27,10 @@ async function getAllAlbums(id) {
 
 async function updateAlbumInfo(id, body, userId) {
   const { name } = body;
-  const album = await Album.query().findById(id).where('userId', userId);
-  if (!album) {
+  const updatedIds = await Album.query().update({ name }).where({ id, userId });
+  if (!updatedIds) {
     throw ErrorService.errorThrow(404);
   }
-  await Album.query().update({ name }).findById(id).where('userId', userId);
   return id;
 }
 

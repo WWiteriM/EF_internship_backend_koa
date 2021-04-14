@@ -19,7 +19,7 @@ class Friends extends BaseModel {
   }
 
   static get hidden() {
-    return ['id', 'createdAt', 'updatedAt'];
+    return ['createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {
