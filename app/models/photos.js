@@ -23,11 +23,11 @@ class Photos extends BaseModel {
   }
 
   static get albumIdColumn() {
-    return 'album_id';
+    return 'albumId';
   }
 
   static get hidden() {
-    return ['path', 'album_id', 'createdAt', 'updatedAt'];
+    return ['path', 'albumId', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {
@@ -49,7 +49,7 @@ class Photos extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Album,
         join: {
-          from: 'photos.album_id',
+          from: 'photos.albumId',
           to: 'albums.id',
         },
       },

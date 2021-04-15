@@ -12,11 +12,11 @@ class UserToDialogs extends BaseModel {
   }
 
   static get userIdColumn() {
-    return 'user_id';
+    return 'userId';
   }
 
   static get dialogIdColumn() {
-    return 'dialog_id';
+    return 'dialogId';
   }
 
   static get hidden() {
@@ -40,7 +40,7 @@ class UserToDialogs extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: User,
         join: {
-          from: 'user_to_dialogs.user_id',
+          from: 'user_to_dialogs.userId',
           to: 'users.id',
         },
       },
@@ -49,7 +49,7 @@ class UserToDialogs extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Dialog,
         join: {
-          from: 'user_to_dialogs.dialog_id',
+          from: 'user_to_dialogs.dialogId',
           to: 'dialogs.id',
         },
       },

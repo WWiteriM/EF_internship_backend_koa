@@ -4,7 +4,7 @@ exports.up = function (knex) {
     table.increments().primary();
     table.string('title');
     table.string('text');
-    table.integer('user_id').unsigned().references('users.id');
+    table.integer('userId').unsigned().references('users.id');
     table.string('createdAt').notNullable();
     table.string('updatedAt');
   });

@@ -11,7 +11,7 @@ class Messages extends BaseModel {
   }
 
   static get dialogIdColumn() {
-    return 'dialog_id';
+    return 'dialogId';
   }
 
   static get textColumn() {
@@ -19,7 +19,7 @@ class Messages extends BaseModel {
   }
 
   static get hidden() {
-    return ['dialog_id', 'createdAt', 'updatedAt'];
+    return ['dialogId', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {
@@ -39,7 +39,7 @@ class Messages extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Dialog,
         join: {
-          from: 'messages.dialog_id',
+          from: 'messages.dialogId',
           to: 'dialogs.id',
         },
       },

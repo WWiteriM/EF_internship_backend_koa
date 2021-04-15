@@ -2,8 +2,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('users_to_dialogs', (table) => {
     table.increments().primary();
-    table.integer('user_id').unsigned().references('users.id');
-    table.integer('dialog_id').unsigned().references('dialogs.id');
+    table.integer('userId').unsigned().references('users.id');
+    table.integer('dialogId').unsigned().references('dialogs.id');
     table.string('createdAt').notNullable();
     table.string('updatedAt');
   });

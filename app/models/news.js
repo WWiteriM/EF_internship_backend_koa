@@ -19,11 +19,11 @@ class News extends BaseModel {
   }
 
   static get userIdColumn() {
-    return 'user_id';
+    return 'userId';
   }
 
   static get hidden() {
-    return ['user_id', 'createdAt', 'updatedAt'];
+    return ['userId', 'createdAt', 'updatedAt'];
   }
 
   static get jsonSchema() {
@@ -44,7 +44,7 @@ class News extends BaseModel {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: Users,
         join: {
-          from: 'news.user_id',
+          from: 'news.userId',
           to: 'users.id',
         },
       },

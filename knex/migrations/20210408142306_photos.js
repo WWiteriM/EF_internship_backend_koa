@@ -5,7 +5,7 @@ exports.up = function (knex) {
     table.string('path');
     table.string('description');
     table.string('tag');
-    table.integer('album_id').unsigned().references('albums.id');
+    table.integer('albumId').unsigned().references('albums.id');
     table.string('createdAt').notNullable();
     table.string('updatedAt');
   });
