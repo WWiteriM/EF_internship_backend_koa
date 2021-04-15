@@ -19,12 +19,7 @@ async function deleteUser(id) {
 }
 
 async function updateUserInfo(id, body) {
-  const { email, name, surname } = body;
-  const userMail = await User.query().findOne({ email });
-  if (userMail) {
-    throw ErrorService.errorThrow(400);
-  }
-  const user = await User.query().update({ email, name, surname }).findById(id);
+  const user = await User.query().update(body).findById(id);
   if (!user) {
     throw ErrorService.errorThrow(404);
   }
