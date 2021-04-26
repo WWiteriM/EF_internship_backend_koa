@@ -43,11 +43,16 @@ async function loginUser(body) {
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (isMatch) {
-    const payload = {
+    const accessPayload = {
       id: user.id,
       email: user.email,
     };
-    return jwt.sign(payload, process.env.SECRET, { expiresIn: '15m' });
+    const accessToken = await jwt.sign(accessPayload, process.env.SECRET, { expiresIn: '15m' });
+    const refreshPayload = {
+      accessToken,
+    };
+    const refreshToken = jwt.sign(refreshPayload, process.env.SECRET, { expiresIn: '7d' });
+    return { refreshToken, accessToken };
   }
   throw ErrorService.errorThrow(400);
 }
