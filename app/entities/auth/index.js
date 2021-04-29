@@ -47,9 +47,10 @@ async function loginUser(body) {
       id: user.id,
       email: user.email,
     };
-    const accessToken = await jwt.sign(accessPayload, process.env.SECRET, { expiresIn: '15m' });
+    const accessToken = await jwt.sign(accessPayload, process.env.SECRET, { expiresIn: '1m' });
     const refreshPayload = {
       accessToken,
+      id: user.id,
     };
     const refreshToken = jwt.sign(refreshPayload, process.env.SECRET, { expiresIn: '7d' });
     return { refreshToken, accessToken };
@@ -111,10 +112,21 @@ async function enterNewUserPassword(body, query) {
   return user.id;
 }
 
+async function refreshAccessToken(body) {
+  const { refreshToken } = body;
+  const tokenParams = await jwtValidate(refreshToken);
+  const payload = {
+    refreshToken,
+    id: tokenParams.id,
+  };
+  return jwt.sign(payload, process.env.SECRET, { expiresIn: '1m' });
+}
+
 module.exports = {
   registrationUser,
   loginUser,
   activateUser,
   recoverUserPassword,
   enterNewUserPassword,
+  refreshAccessToken,
 };

@@ -30,6 +30,10 @@ const newPasswordParamsSchema = yup.object().shape({
   recoveryPasswordToken: yup.string().required(),
 });
 
+const refreshTokenBodySchema = yup.object().shape({
+  refreshToken: yup.string().required(),
+});
+
 module.exports = {
   registerBodySchema,
   recoverUserPasswordBodySchema,
@@ -37,4 +41,5 @@ module.exports = {
   newPasswordBodySchema,
   newPasswordParamsSchema,
   activateParamsSchema,
+  refreshTokenBodySchema,
 };

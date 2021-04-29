@@ -8,6 +8,7 @@ const {
   newPasswordBodySchema,
   newPasswordParamsSchema,
   activateParamsSchema,
+  refreshTokenBodySchema,
 } = require('./validationSchemes');
 
 const router = new Router({
@@ -17,6 +18,7 @@ const router = new Router({
 router
   .post('/registration', bodyValidate(registerBodySchema), registration)
   .post('/login', bodyValidate(loginBodySchema), login)
+  .post('/refresh', bodyValidate(refreshTokenBodySchema), refresh)
   .post('/activate', paramsValidate(activateParamsSchema), activate)
   .post('/recovery', bodyValidate(recoverUserPasswordBodySchema), recovery)
   .put(
@@ -54,6 +56,12 @@ async function newPassword(ctx) {
   const { query } = ctx.request;
   const params = ctx.request.body;
   ctx.body = await AuthEntity.enterNewUserPassword(params, query);
+  ctx.status = 200;
+}
+
+async function refresh(ctx) {
+  const params = ctx.request.body;
+  ctx.body = await AuthEntity.refreshAccessToken(params);
   ctx.status = 200;
 }
 
